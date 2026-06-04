@@ -1,4 +1,4 @@
-package com.jordantran.bank_api.entities;
+package com.jordantran.bank_api.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +22,8 @@ public class BankEntity {
 	private String errorStr;
 	
 	private int noc; // number of clients
+	
+
 }
 
 
@@ -29,9 +31,9 @@ public class BankEntity {
 
 
 
+
+
 /*
-
-
 -- for testing
 DROP TABLE IF EXISTS bank_transaction;
 DROP TABLE IF EXISTS client;
@@ -106,32 +108,34 @@ CREATE TABLE bank_transaction (
 - Transaction
     - ON update restrict default, the PK value of client should never really change (can cause problems like FK references breaking) so prob an accident at that point
 
+
+
+
+
+
+
+
+
+
+ Testing 
+
+ Expect Pass 
+-- INSERT INTO bank VALUES(0, FALSE, '', 0);
+-- INSERT INTO client VALUES(0, 0, 0.00, 'Jordan', 0);
+-- INSERT INTO client VALUES(1, 0, 0.23, 'John', 0);
+-- INSERT INTO bank_transaction VALUES(0, 'DEPOSIT', 0.00, 0);
+-- INSERT INTO bank_transaction VALUES(1, 'DEPOSIT', 2.23, 0);
+
+
+Expect Fail 
+-- INSERT INTO bank_transaction VALUES(0, 'DEPOSIT', -2, 0);
+
+-- SELECT * FROM bank;
+-- SELECT * FROM client;
+-- SELECT * FROM bank_transaction;
+
 */
 
-
-
-
-
-
-
-
-
-///* Testing 
-//
-// Expect Pass 
-//-- INSERT INTO bank VALUES(0, FALSE, '', 0);
-//-- INSERT INTO client VALUES(0, 0, 0.00, 'Jordan', 0);
-//-- INSERT INTO client VALUES(1, 0, 0.23, 'John', 0);
-//-- INSERT INTO bank_transaction VALUES(0, 'DEPOSIT', 0.00, 0);
-//-- INSERT INTO bank_transaction VALUES(1, 'DEPOSIT', 2.23, 0);
-//
-//
-//Expect Fail 
-//-- INSERT INTO bank_transaction VALUES(0, 'DEPOSIT', -2, 0);
-//
-//-- SELECT * FROM bank;
-//-- SELECT * FROM client;
-//-- SELECT * FROM bank_transaction;
 
 
 
