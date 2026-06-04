@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import lombok.extern.java.Log;
 
 @SpringBootApplication
-@Log // for logging
+//@Log // for logging
 public class BankApiApplication {
 
 	public static void main(String[] args) {
