@@ -26,7 +26,7 @@ public class BankEntity {
 	@NotNull
 	private String errorStr;
 	
-	@NotNull @Positive
+	@NotNull @Min(0)
 	private Long numOfClients; // number of clients
 	
 

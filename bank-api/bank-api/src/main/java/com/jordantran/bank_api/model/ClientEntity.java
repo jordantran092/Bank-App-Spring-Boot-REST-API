@@ -21,11 +21,11 @@ public class ClientEntity {
 	@NotNull
     private String name;
 	
-	@NotNull @Positive
+	@NotNull @Min(0)
     private double balance;
 
 	
-	@NotNull @Positive
+	@NotNull @Min(0)
     private Long numOfTransactions; // number of transactions
     
     @ManyToOne
