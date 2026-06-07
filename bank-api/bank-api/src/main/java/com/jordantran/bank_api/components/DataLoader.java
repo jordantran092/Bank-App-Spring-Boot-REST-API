@@ -3,8 +3,9 @@ package com.jordantran.bank_api.components;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.jordantran.bank_api.model.BankEntity;
 import com.jordantran.bank_api.services.BankService;
+
+import domain.entities.BankEntity;
 
 
 

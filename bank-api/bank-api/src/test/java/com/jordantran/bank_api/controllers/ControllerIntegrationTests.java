@@ -1,0 +1,70 @@
+package com.jordantran.bank_api.controllers;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jordantran.bank_api.TestDataUtil;
+import com.jordantran.bank_api.services.BankService;
+
+import domain.dto.*;
+
+
+
+@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc
+class ControllerIntegrationTests {
+	
+	private BankService bankService;
+	private ObjectMapper objectMapper;
+	private MockMvc mockMvc;
+	
+	@Autowired
+	public ControllerIntegrationTests(BankService bankService, ObjectMapper objectMapper, MockMvc mockMvc) {
+		this.bankService = bankService;
+		this.objectMapper = new ObjectMapper();
+		this.mockMvc = mockMvc;
+	}
+	
+	
+	
+	@Test
+	void testThatClientCreationReturnsHttp201() throws Exception {
+
+		
+		BankDTO bankDTO = TestDataUtil.createBank();
+		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
+		
+		
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
+	
+		
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        ).andExpect(
+        		// check status of http response result for 201 created
+                MockMvcResultMatchers.status().isCreated()
+        );
+	}
+	
+	
+	// make test for json body too
+	
+	
+
+}

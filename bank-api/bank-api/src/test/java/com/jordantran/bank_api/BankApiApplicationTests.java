@@ -9,26 +9,19 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.jordantran.bank_api.services.BankService;
 
-import lombok.extern.java.Log;
 
-
-
-//@Log
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class BankApiApplicationTests {
 	
-	BankService bankService;
+	private BankService bankService;
 	
 	@Autowired
 	public BankApiApplicationTests(BankService bankService) {
 		this.bankService = bankService;
 	}
-	
 
-	@Test
-	void contextLoads() {}
 	
 	
 	@Test
