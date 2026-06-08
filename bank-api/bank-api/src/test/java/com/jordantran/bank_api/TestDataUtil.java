@@ -20,7 +20,7 @@ public class TestDataUtil {
 	
 	public static ClientDTO createClientA(BankDTO bankDTO) {
 		return ClientDTO.builder()
-				.id(0L)
+				.id(null) // auto generated, if the id field is provided, Hibernate assumes the entity already exists in the database. If no matching row is found, Hibernate interprets this as the entity having been deleted by another transaction, resulting in an OptimisticLockException
 				.name("John")
 				.balance(20.3)
 				.numOfTransactions(0L)

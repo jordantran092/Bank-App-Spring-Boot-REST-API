@@ -34,15 +34,55 @@ public class Controller {
 		 * return dto
 		 */
 		
+		ResponseEntity<ClientDTO> result = null;
+		
 		
 		ClientEntity clientEntity = clientMapper.mapFrom(clientDTO); 
 		
 		ClientEntity savedClientEntity = bankService.addClient(clientEntity);
 		
-		ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
 		
-		return new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
+		if(savedClientEntity != null) {
+			ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
+			result = new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
+		}
+		else {
+			result = new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		
+		return result;
+	
+	}
+	
+	@PatchMapping(path = "/api/v1/bank/{client_name}")
+	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO) {
+		/*
+		 * bank.addclient will handle the business logic, not here
+		 * 
+		 * convert dto to entity
+		 * input into bank.addclient 
+		 * return result of added client 
+		 * convert back to dto
+		 * return dto
+		 */
+		
+		ResponseEntity<ClientDTO> result = null;
+		
+		
+		ClientEntity clientEntity = clientMapper.mapFrom(clientDTO); 
+		
+		ClientEntity savedClientEntity = bankService.addClient(clientEntity);
+		
+		
+		if(savedClientEntity != null) {
+			ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
+			result = new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
+		}
+		else {
+			result = new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		return result;
 	
 	}
 }

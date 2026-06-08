@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "bank_transaction")
 public class TransactionEntity {
 	
-	@Id @NotNull
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq") // SEQUENCE for a sequence of values x, x+1, ...
 	private Long id;
 	

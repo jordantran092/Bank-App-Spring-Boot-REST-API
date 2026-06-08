@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 public class BankEntity {
 	
 	
-	@Id @NotNull
+	@Id
 	private Long id;
 	
 	@NotNull

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "client")
 public class ClientEntity {
 	
-	@Id @NotNull
+	@Id
 	/*
 	 * SEQUENCE for a sequence of values x, x+1, ...
 	 * The id generated for the database will overwrite any other id that existed when this entity was created, with .save

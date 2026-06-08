@@ -63,8 +63,40 @@ class ControllerIntegrationTests {
         );
 	}
 	
+	@Test
+	void testThatClientCreationReturnsSavedClient() throws Exception {
+
+		
+		BankDTO bankDTO = TestDataUtil.createBank();
+		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
+		
+		
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
 	
-	// make test for json body too
+		
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").isNumber() // auto generated, so as long as number, good
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("John")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.balance").value(20.3)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.numOfTransactions").value(0)
+        ).andExpect(
+        		// bankDTO is a nested object, requires dot navigation
+                MockMvcResultMatchers.jsonPath("$.bankDTO.error").value(false)
+		).andExpect(
+                MockMvcResultMatchers.jsonPath("$.bankDTO.errorStr").value("")
+        );
+	}
+	
+	
+
 	
 	
 
