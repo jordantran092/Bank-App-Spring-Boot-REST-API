@@ -4,9 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 import com.jordantran.bank_api.components.mappers.Mapper;
-
-import domain.dto.ClientDTO;
-import domain.entities.ClientEntity;
+import com.jordantran.bank_api.domain.dto.ClientDTO;
+import com.jordantran.bank_api.domain.entities.ClientEntity;
 
 /*
  * Impl uses ModelMapper to convert entities to DTOs and back

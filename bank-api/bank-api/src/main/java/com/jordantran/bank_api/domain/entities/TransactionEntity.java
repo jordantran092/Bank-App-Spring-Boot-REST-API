@@ -1,4 +1,4 @@
-package domain.entities;
+package com.jordantran.bank_api.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;

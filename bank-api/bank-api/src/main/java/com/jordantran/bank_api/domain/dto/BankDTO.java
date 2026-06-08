@@ -1,4 +1,4 @@
-package domain.dto;
+package com.jordantran.bank_api.domain.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -10,29 +10,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all attributes
 @NoArgsConstructor // constructor with no attributes
 @Builder // instantiate objects easier
-
-public class ClientDTO {
+public class BankDTO {
+	
 	
 	private Long id;
 	
-
-    private String name;
+	private boolean error;
 	
+	private String errorStr;
 	
-    private double balance;
-
+//	private Long numOfClients; // number of clients
 	
-	
-    private Long numOfTransactions; // number of transactions
-    
 
-    private BankDTO bankDTO; 
-
-
-	
 }
-
-
-
 
 

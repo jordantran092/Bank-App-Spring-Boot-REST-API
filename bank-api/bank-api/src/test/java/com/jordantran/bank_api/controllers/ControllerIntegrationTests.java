@@ -15,9 +15,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jordantran.bank_api.TestDataUtil;
+import com.jordantran.bank_api.domain.dto.BankDTO;
+import com.jordantran.bank_api.domain.dto.ClientDTO;
 import com.jordantran.bank_api.services.BankService;
 
-import domain.dto.*;
 
 
 

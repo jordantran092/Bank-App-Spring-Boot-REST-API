@@ -1,10 +1,11 @@
 package com.jordantran.bank_api.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.jordantran.bank_api.domain.entities.ClientEntity;
 import com.jordantran.bank_api.repositories.ClientRepository;
-
-import domain.entities.ClientEntity;
 
 
 @Service
@@ -24,5 +25,9 @@ public class ClientService {
 	
 	public ClientEntity save(ClientEntity clientEntity) {
 		return clientRepository.save(clientEntity);
+	}
+	
+	public List<ClientEntity> findAll() {
+		return clientRepository.findAll();
 	}
 }

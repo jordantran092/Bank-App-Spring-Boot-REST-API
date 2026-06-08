@@ -1,14 +1,15 @@
 package com.jordantran.bank_api.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jordantran.bank_api.components.mappers.Mapper;
+import com.jordantran.bank_api.domain.dto.ClientDTO;
+import com.jordantran.bank_api.domain.entities.ClientEntity;
 import com.jordantran.bank_api.services.*;
 
-import domain.dto.*;
-import domain.entities.*;
 
 @RestController
 public class Controller {
@@ -16,8 +17,9 @@ public class Controller {
 	private Mapper<ClientEntity, ClientDTO> clientMapper;
 	private BankService bankService;
 	
-	public Controller(Mapper<ClientEntity, ClientDTO> clientMapper) {
+	public Controller(Mapper<ClientEntity, ClientDTO> clientMapper, BankService bankService) {
 		this.clientMapper = clientMapper;
+		this.bankService = bankService;
 	}
 
 	@PostMapping(path = "/api/v1/bank")
@@ -37,7 +39,10 @@ public class Controller {
 		
 		ClientEntity savedClientEntity = bankService.addClient(clientEntity);
 		
+		ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
 		
-		// return
+		return new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
+		
+	
 	}
 }

@@ -2,8 +2,8 @@ package com.jordantran.bank_api;
 
 
 
-import domain.dto.BankDTO;
-import domain.dto.ClientDTO;
+import com.jordantran.bank_api.domain.dto.BankDTO;
+import com.jordantran.bank_api.domain.dto.ClientDTO;
 
 
 
@@ -14,7 +14,7 @@ public class TestDataUtil {
 				.id(0L)
 				.error(false)
 				.errorStr("")
-				.numOfClients(0L)
+//				.numOfClients(0L)
 				.build();
 	}
 	

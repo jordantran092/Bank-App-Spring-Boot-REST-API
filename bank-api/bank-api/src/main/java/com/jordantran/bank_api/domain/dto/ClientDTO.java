@@ -1,8 +1,6 @@
-package domain.entities;
+package com.jordantran.bank_api.domain.dto;
 
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,24 +10,29 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // constructor with all attributes
 @NoArgsConstructor // constructor with no attributes
 @Builder // instantiate objects easier
-@Entity
-@Table(name = "bank")
-public class BankEntity {
+
+public class ClientDTO {
 	
-	
-	@Id @NotNull
 	private Long id;
 	
-	@NotNull
-	private boolean error;
-	
-	@NotNull
-	private String errorStr;
-	
-	@NotNull @Min(0)
-	private Long numOfClients; // number of clients
-	
 
+    private String name;
+	
+	
+    private double balance;
+
+	
+	
+    private Long numOfTransactions; // number of transactions
+    
+
+    private BankDTO bankDTO; 
+
+
+	
 }
+
+
+
 
 

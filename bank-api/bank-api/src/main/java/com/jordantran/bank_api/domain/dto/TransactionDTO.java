@@ -1,4 +1,4 @@
-package domain.dto;
+package com.jordantran.bank_api.domain.dto;
 
 
 import lombok.AllArgsConstructor;
