@@ -5,6 +5,7 @@ package com.jordantran.bank_api;
 import com.jordantran.bank_api.domain.dto.BankDTO;
 import com.jordantran.bank_api.domain.dto.ClientDTO;
 import com.jordantran.bank_api.domain.dto.TransactionDTO;
+import com.jordantran.bank_api.domain.dto.TransactionDepositWithdrawDTO;
 
 
 
@@ -33,21 +34,19 @@ public class TestDataUtil {
 		return createClientA(null);
 	}
 
-	public static TransactionDTO createTransactionDepositA(ClientDTO clientDTO) {
-		return TransactionDTO.builder()
-				.id(null) // auto generated
+	public static TransactionDepositWithdrawDTO createTransactionDepositA() {
+		return TransactionDepositWithdrawDTO.builder()
 				.transactionType("DEPOSIT")
 				.amount(10.2)
-				.clientDTO(clientDTO)
+				.name("John")
 				.build();
 	}
 	
-	public static TransactionDTO createTransactionWithdrawA(ClientDTO clientDTO) {
-		return TransactionDTO.builder()
-				.id(null) // auto generated
+	public static TransactionDepositWithdrawDTO createTransactionWithdrawA() {
+		return TransactionDepositWithdrawDTO.builder()
 				.transactionType("WITHDRAW")
 				.amount(5)
-				.clientDTO(clientDTO)
+				.name("John")
 				.build();
 	}
 }

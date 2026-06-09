@@ -78,17 +78,13 @@ public class BankService {
 	}
 	
 	
-	public Optional<TransactionEntity> withdraw(String clientName, TransactionEntity transactionEntity) {
+	public Optional<TransactionEntity> withdraw(String clientName, double amount) {
 
-		
-		
-		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
-		transactionEntity.getClientEntity().setName(clientName);
+
 		
 		
 		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
 		
-		double amount = transactionEntity.getAmount();
 		
 		ClientEntity client = getClient(clientName);
 		
@@ -115,17 +111,13 @@ public class BankService {
 		
 	}
 	
-	public Optional<TransactionEntity> deposit(String clientName, TransactionEntity transactionEntity) {
+	public Optional<TransactionEntity> deposit(String clientName, double amount) {
 
 		
-		
-		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
-		transactionEntity.getClientEntity().setName(clientName);
-		
+	
 		
 		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
 		
-		double amount = transactionEntity.getAmount();
 		
 		ClientEntity client = getClient(clientName);
 		

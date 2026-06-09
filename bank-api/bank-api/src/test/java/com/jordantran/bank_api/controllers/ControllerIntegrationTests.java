@@ -39,7 +39,7 @@ class ControllerIntegrationTests {
 	}
 	
 	
-	//------
+	//----------------------------------
 	
 	/* Withdrawals */
 	
@@ -53,7 +53,7 @@ class ControllerIntegrationTests {
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDTO transactionDTO = TestDataUtil.createTransactionWithdrawA(clientDTO);
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -89,7 +89,7 @@ class ControllerIntegrationTests {
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDTO transactionDTO = TestDataUtil.createTransactionWithdrawA(clientDTO);
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -120,32 +120,44 @@ class ControllerIntegrationTests {
 	}
 	
 	
-//	
-//	
-//	@Test
-//	void testThatDepositReturnsHttpConflictWhenClientNotExist() throws Exception {
-//
-//		
-//		// No need bank dto, can leave null
-//		
-//		ClientDTO clientDTO = TestDataUtil.createClientA();
-//		
-//		
-//		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
-//		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
-//		
-//		
-//        // Deposit
-//        mockMvc.perform(
-//        		// call post method, with type json, and json body
-//                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(transactionJson)
-//        ).andExpect(
-//        		// check status of http response result for http conflict
-//                MockMvcResultMatchers.status().isConflict()
-//        );
-//	}
+	
+	
+	@Test
+	void testThatWithdrawReturnsHttpConflictWhenClientNotExist() throws Exception {
+
+		
+		// No need bank dto, can leave null
+		
+
+		
+		
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+		
+		
+        // Deposit
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + transactionDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		// check status of http response result for http conflict
+                MockMvcResultMatchers.status().isConflict()
+        );
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -161,7 +173,7 @@ class ControllerIntegrationTests {
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -197,7 +209,7 @@ class ControllerIntegrationTests {
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -233,18 +245,17 @@ class ControllerIntegrationTests {
 
 		
 		// No need bank dto, can leave null
+
 		
-		ClientDTO clientDTO = TestDataUtil.createClientA();
 		
-		
-		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 		
 		
         // Deposit
         mockMvc.perform(
         		// call post method, with type json, and json body
-                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + transactionDTO.getName())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(transactionJson)
         ).andExpect(

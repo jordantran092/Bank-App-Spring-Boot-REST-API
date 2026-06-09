@@ -64,12 +64,47 @@ public class Controller {
 	
 	
 	@PatchMapping(path = "/api/v1/bank/clients/{clientName}")
-	public ResponseEntity<TransactionDTO> depositOrWithdraw(@RequestBody TransactionDTO transactionDTO, @PathVariable("clientName") String clientName) {
+	public ResponseEntity<TransactionDTO> depositOrWithdraw(@RequestBody TransactionDepositWithdrawDTO transactionDepositWithdrawDTO, @PathVariable("clientName") String clientName) {
 
 		
 		// Decided to re-use transaction object instead of making a separate object for this, contains all attributes we need. The rest of attributes can be left null since not needed
 		
 		ResponseEntity<TransactionDTO> result = null;
+		 
+		
+		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
+		
+		
+		if(transactionDepositWithdrawDTO.getTransactionType().equals("DEPOSIT")) {
+			savedTransactionEntity = bankService.deposit(clientName, transactionDepositWithdrawDTO.getAmount());	
+		}
+		else if(transactionDepositWithdrawDTO.getTransactionType().equals("WITHDRAW")) {
+			savedTransactionEntity = bankService.withdraw(clientName, transactionDepositWithdrawDTO.getAmount());	
+		}
+		
+		
+		if(savedTransactionEntity.isPresent()) {
+			
+			TransactionDTO savedTransactionDTO = transactionMapper.mapTo(savedTransactionEntity.get());
+			result = new ResponseEntity<>(savedTransactionDTO, HttpStatus.OK);
+		}
+		else {
+			result = new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		
+
+		return result;
+	
+	}
+	
+	
+	
+	@PatchMapping(path = "/api/v1/bank/clients/?fromName={fromName}&toName={toName}")
+	public ResponseEntity<TransactionTransferDTO> transfer(@RequestBody TransactionTransferDTO transactionTransferDTO, @PathVariable("fromName") String fromName, @PathVariable("toName") String toName) {
+
+		
+		ResponseEntity<TransactionTransferDTO> result = null;
 		
 		
 		TransactionEntity transactionEntity = transactionMapper.mapFrom(transactionDTO); 
