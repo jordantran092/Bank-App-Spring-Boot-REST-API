@@ -58,11 +58,14 @@ public class Controller {
 	
 	}
 	
+	
+	
+	
+	
+	
 	@PatchMapping(path = "/api/v1/bank/clients/{clientName}")
 	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO, @PathVariable("clientName") String clientName) {
-		/*
-		 * Just re-use transaction entity, contains all the attributes you need, and in the http request leave the unnecessary attributes null. Return the updated client balance in the transaction (should be nested by default), can use for assertions
-		 */
+
 		
 		// Decided to re-use transaction object instead of making a separate object for this, contains all attributes we need. The rest of attributes can be left null since not needed
 		
