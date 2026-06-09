@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.jordantran.bank_api.domain.entities.BankEntity;
 import com.jordantran.bank_api.domain.entities.ClientEntity;
+import com.jordantran.bank_api.domain.entities.TransactionEntity;
 import com.jordantran.bank_api.repositories.BankRepository;
 
 @Service
@@ -131,6 +132,50 @@ public class BankService {
 		}
 		
 		return client;
+	}
+
+	public TransactionEntity deposit(TransactionEntity transactionEntity) {
+		/*
+		 
+		Client client = getClient(name);
+		
+		if(client == null) { //rank1
+			turnOnError(String.format("Error: To-Account %s does not exist", name));
+		}
+		else if(amount <= 0) { //rank 2
+			turnOnError("Error: Non-Positive Amount");
+		}
+		else {
+			client.deposit(amount);
+			
+			turnOffError();
+		}
+		 */
+		
+		TransactionEntity savedTransactionEntity = null;
+		
+		String clientName = transactionEntity.getClientEntity().getName();
+		double amount = transactionEntity.getAmount();
+		
+		ClientEntity client = getClient(clientName);
+		
+		if(client == null) { //rank1
+			turnOnError(String.format("Error: To-Account %s does not exist", clientName));
+		}
+		else if(amount <= 0) { //rank 2
+			turnOnError("Error: Non-Positive Amount");
+		}
+		else {
+			
+			
+			savedTransactionEntity = clientService.deposit(client.getId(), amount);
+			
+			turnOffError();
+		}
+		
+		
+		return savedTransactionEntity;
+		
 	}
 	
 	

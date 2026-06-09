@@ -27,6 +27,7 @@ public class TransactionEntity {
     
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @NotNull
     private ClientEntity clientEntity; 
 
 

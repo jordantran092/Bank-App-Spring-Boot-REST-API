@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jordantran.bank_api.components.mappers.Mapper;
-import com.jordantran.bank_api.domain.dto.ClientDTO;
-import com.jordantran.bank_api.domain.entities.ClientEntity;
+import com.jordantran.bank_api.domain.dto.*;
+import com.jordantran.bank_api.domain.entities.*;
 import com.jordantran.bank_api.services.*;
 
 
@@ -15,11 +15,13 @@ import com.jordantran.bank_api.services.*;
 public class Controller {
 	
 	private Mapper<ClientEntity, ClientDTO> clientMapper;
+	private Mapper<TransactionEntity, TransactionDTO> transactionMapper;
 	private BankService bankService;
 	
-	public Controller(Mapper<ClientEntity, ClientDTO> clientMapper, BankService bankService) {
+	public Controller(Mapper<ClientEntity, ClientDTO> clientMapper, Mapper<TransactionEntity, TransactionDTO> transactionMapper, BankService bankService) {
 		this.clientMapper = clientMapper;
 		this.bankService = bankService;
+		this.transactionMapper = transactionMapper;
 	}
 
 	@PostMapping(path = "/api/v1/bank")
@@ -57,30 +59,21 @@ public class Controller {
 	@PatchMapping(path = "/api/v1/bank/{client_name}")
 	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO) {
 		/*
-		 * bank.addclient will handle the business logic, not here
-		 * 
-		 * convert dto to entity
-		 * input into bank.addclient 
-		 * return result of added client 
-		 * convert back to dto
-		 * return dto
+		 * Just re-use transaction entity, contains all the attributes you need, and in the http request leave the unnecessary attributes null. Return the updated client balance in the transaction (should be nested by default), can use for assertions
 		 */
 		
-		ResponseEntity<ClientDTO> result = null;
+		ResponseEntity<TransactionDTO> result = null;
 		
 		
-		ClientEntity clientEntity = clientMapper.mapFrom(clientDTO); 
+		TransactionEntity transactionEntity = transactionMapper.mapFrom(transactionDTO); 
 		
-		ClientEntity savedClientEntity = bankService.addClient(clientEntity);
+		TransactionEntity savedTransactionEntity = bankService.deposit(transactionEntity);
 		
 		
-		if(savedClientEntity != null) {
-			ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
-			result = new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
-		}
-		else {
-			result = new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
+	
+		TransactionDTO savedTransactionDTO = transactionMapper.mapTo(savedTransactionEntity);
+		result = new ResponseEntity<>(savedTransactionDTO, HttpStatus.OK);
+
 		
 		return result;
 	

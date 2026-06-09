@@ -15,9 +15,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jordantran.bank_api.TestDataUtil;
-import com.jordantran.bank_api.domain.dto.BankDTO;
-import com.jordantran.bank_api.domain.dto.ClientDTO;
-import com.jordantran.bank_api.services.BankService;
+import com.jordantran.bank_api.domain.dto.*;
+import com.jordantran.bank_api.services.*;
 
 
 
@@ -37,6 +36,30 @@ class ControllerIntegrationTests {
 		this.bankService = bankService;
 		this.objectMapper = new ObjectMapper();
 		this.mockMvc = mockMvc;
+	}
+	
+	
+	@Test
+	void testThatDepositReturnsHttp200() throws Exception {
+
+		
+		
+		
+		ClientDTO clientDTO = TestDataUtil.createClientA();
+		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
+		
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/" + clientDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		// check status of http response result for 200 OK
+                MockMvcResultMatchers.status().isOk()
+        );
 	}
 	
 	

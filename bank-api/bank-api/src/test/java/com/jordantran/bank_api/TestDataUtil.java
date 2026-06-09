@@ -4,6 +4,7 @@ package com.jordantran.bank_api;
 
 import com.jordantran.bank_api.domain.dto.BankDTO;
 import com.jordantran.bank_api.domain.dto.ClientDTO;
+import com.jordantran.bank_api.domain.dto.TransactionDTO;
 
 
 
@@ -25,6 +26,19 @@ public class TestDataUtil {
 				.balance(20.3)
 				.numOfTransactions(0L)
 				.bankDTO(bankDTO)
+				.build();
+	}
+	
+	public static ClientDTO createClientA() {
+		return createClientA(null);
+	}
+
+	public static TransactionDTO createTransactionDepositA(ClientDTO clientDTO) {
+		return TransactionDTO.builder()
+				.id(null) // auto generated
+				.transactionType("DEPOSIT")
+				.amount(10.2)
+				.clientDTO(clientDTO)
 				.build();
 	}
 }
