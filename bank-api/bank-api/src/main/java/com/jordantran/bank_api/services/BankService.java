@@ -77,6 +77,83 @@ public class BankService {
 		
 	}
 	
+	
+	public Optional<TransactionEntity> withdraw(String clientName, TransactionEntity transactionEntity) {
+
+		
+		
+		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
+		transactionEntity.getClientEntity().setName(clientName);
+		
+		
+		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
+		
+		double amount = transactionEntity.getAmount();
+		
+		ClientEntity client = getClient(clientName);
+		
+		if(client == null) { //rank1
+			turnOnError(String.format("Error: From-Account %s does not exist", clientName));
+		}
+		else if(amount <= 0) { //rank 2
+			turnOnError("Error: Non-Positive Amount");
+		}
+		else if(amount > client.getBalance()) {
+			turnOnError("Error: Amount too large to withdraw");
+		}
+		else {
+
+			
+			
+			savedTransactionEntity = Optional.of(clientService.withdraw(client.getId(), amount));
+			
+			turnOffError();
+		}
+		
+		
+		return savedTransactionEntity;
+		
+	}
+	
+	public Optional<TransactionEntity> deposit(String clientName, TransactionEntity transactionEntity) {
+
+		
+		
+		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
+		transactionEntity.getClientEntity().setName(clientName);
+		
+		
+		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
+		
+		double amount = transactionEntity.getAmount();
+		
+		ClientEntity client = getClient(clientName);
+		
+		if(client == null) { //rank1
+			turnOnError(String.format("Error: To-Account %s does not exist", clientName));
+		}
+		else if(amount <= 0) { //rank 2
+			turnOnError("Error: Non-Positive Amount");
+		}
+		else {
+
+			
+			
+			savedTransactionEntity = Optional.of(clientService.deposit(client.getId(), amount));
+			
+			turnOffError();
+		}
+		
+		
+		return savedTransactionEntity;
+		
+	}
+	
+	
+	
+	
+	
+	
 
 	
 	
@@ -117,9 +194,8 @@ public class BankService {
 		
 	}
 	
-
 	
-	public ClientEntity getClient(String name) {
+	private ClientEntity getClient(String name) {
 		ClientEntity client = null;
 		
 		List<ClientEntity> clients = clientService.findAll();
@@ -138,56 +214,21 @@ public class BankService {
 		
 		return client;
 	}
-
-	public Optional<TransactionEntity> deposit(String clientName, TransactionEntity transactionEntity) {
-		/*
-		 
-		Client client = getClient(name);
-		
-		if(client == null) { //rank1
-			turnOnError(String.format("Error: To-Account %s does not exist", name));
-		}
-		else if(amount <= 0) { //rank 2
-			turnOnError("Error: Non-Positive Amount");
-		}
-		else {
-			client.deposit(amount);
-			
-			turnOffError();
-		}
-		 */
-		
-		
-		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
-		transactionEntity.getClientEntity().setName(clientName);
-		
-		
-		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
-		
-		double amount = transactionEntity.getAmount();
-		
-		ClientEntity client = getClient(clientName);
-		
-		if(client == null) { //rank1
-			turnOnError(String.format("Error: To-Account %s does not exist", clientName));
-		}
-		else if(amount <= 0) { //rank 2
-			turnOnError("Error: Non-Positive Amount");
-		}
-		else {
-
-			
-			
-			savedTransactionEntity = Optional.of(clientService.deposit(client.getId(), amount));
-			
-			turnOffError();
-		}
-		
-		
-		return savedTransactionEntity;
-		
-	}
 	
+
+	
+
+
+	
+	
+	
+	
+	
+	
+	
+
+	
+
 	
 
 

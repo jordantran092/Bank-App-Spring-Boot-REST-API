@@ -41,4 +41,13 @@ public class TestDataUtil {
 				.clientDTO(clientDTO)
 				.build();
 	}
+	
+	public static TransactionDTO createTransactionWithdrawA(ClientDTO clientDTO) {
+		return TransactionDTO.builder()
+				.id(null) // auto generated
+				.transactionType("WITHDRAW")
+				.amount(5)
+				.clientDTO(clientDTO)
+				.build();
+	}
 }

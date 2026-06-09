@@ -64,7 +64,7 @@ public class Controller {
 	
 	
 	@PatchMapping(path = "/api/v1/bank/clients/{clientName}")
-	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO, @PathVariable("clientName") String clientName) {
+	public ResponseEntity<TransactionDTO> depositOrWithdraw(@RequestBody TransactionDTO transactionDTO, @PathVariable("clientName") String clientName) {
 
 		
 		// Decided to re-use transaction object instead of making a separate object for this, contains all attributes we need. The rest of attributes can be left null since not needed
@@ -74,7 +74,16 @@ public class Controller {
 		
 		TransactionEntity transactionEntity = transactionMapper.mapFrom(transactionDTO); 
 		
-		Optional<TransactionEntity> savedTransactionEntity = bankService.deposit(clientName, transactionEntity);
+		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
+		
+		
+		if(transactionDTO.getTransactionType().equals("DEPOSIT")) {
+			savedTransactionEntity = bankService.deposit(clientName, transactionEntity);	
+		}
+		else if(transactionDTO.getTransactionType().equals("WITHDRAW")) {
+			savedTransactionEntity = bankService.withdraw(clientName, transactionEntity);	
+		}
+		
 		
 		if(savedTransactionEntity.isPresent()) {
 			
