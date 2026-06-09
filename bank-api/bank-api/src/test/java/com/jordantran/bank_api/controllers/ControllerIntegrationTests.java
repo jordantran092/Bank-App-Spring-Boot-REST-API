@@ -43,7 +43,7 @@ class ControllerIntegrationTests {
 	void testThatDepositReturnsHttp200() throws Exception {
 
 		
-		
+		// No need bank dto, can leave null
 		
 		ClientDTO clientDTO = TestDataUtil.createClientA();
 		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
@@ -53,14 +53,51 @@ class ControllerIntegrationTests {
 		
         mockMvc.perform(
         		// call post method, with type json, and json body
-                MockMvcRequestBuilders.patch("/api/v1/bank/" + clientDTO.getName())
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(transactionJson)
         ).andExpect(
-        		// check status of http response result for 200 OK
-                MockMvcResultMatchers.status().isOk()
+        		// check status of http response result for conflict
+                MockMvcResultMatchers.status().isConflict()
         );
 	}
+	
+	@Test
+	void testThatDepositReturnsSavedTransactionDeposit() throws Exception {
+
+		
+		// No need bank dto, can leave null
+		
+		ClientDTO clientDTO = TestDataUtil.createClientA();
+		TransactionDTO transactionDTO = TestDataUtil.createTransactionDepositA(clientDTO);
+		
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.id").isNumber()
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.transactionType").value("DEPOSIT")  
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.amount").value(10.2)
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.clientDTO.name").value("John")
+        );
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -77,7 +114,7 @@ class ControllerIntegrationTests {
 		
         mockMvc.perform(
         		// call post method, with type json, and json body
-                MockMvcRequestBuilders.post("/api/v1/bank")
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(clientJson)
         ).andExpect(
@@ -99,7 +136,7 @@ class ControllerIntegrationTests {
 		
         mockMvc.perform(
         		// call post method, with type json, and json body
-                MockMvcRequestBuilders.post("/api/v1/bank")
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(clientJson)
         ).andExpect(
@@ -109,14 +146,49 @@ class ControllerIntegrationTests {
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.balance").value(20.3)
         ).andExpect(
-                MockMvcResultMatchers.jsonPath("$.numOfTransactions").value(0)
-        ).andExpect(
         		// bankDTO is a nested object, requires dot navigation
                 MockMvcResultMatchers.jsonPath("$.bankDTO.error").value(false)
 		).andExpect(
                 MockMvcResultMatchers.jsonPath("$.bankDTO.errorStr").value("")
         );
 	}
+	
+	
+	@Test
+	void testThatClientCreationReturnsHttpConflict() throws Exception {
+
+		
+		BankDTO bankDTO = TestDataUtil.createBank();
+		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
+		ClientDTO clientDTO2 = TestDataUtil.createClientA(bankDTO);
+		
+		
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
+		String clientJson2 = objectMapper.writeValueAsString(clientDTO2);
+	
+		
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        );
+        
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson2)
+        ).andExpect(
+        		// check status of http response result for conflict
+                MockMvcResultMatchers.status().isConflict()
+        );
+	}
+	
+	
+	
+	
+	
 	
 	
 

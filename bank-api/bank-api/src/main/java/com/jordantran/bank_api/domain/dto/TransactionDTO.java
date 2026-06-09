@@ -24,6 +24,8 @@ public class TransactionDTO {
 
     private ClientDTO clientDTO; 
 
+    
+
 
 	
 }

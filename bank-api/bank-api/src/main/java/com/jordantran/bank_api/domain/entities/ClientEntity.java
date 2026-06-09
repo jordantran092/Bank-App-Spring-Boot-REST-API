@@ -30,8 +30,8 @@ public class ClientEntity {
     private double balance;
 
 	
-	@NotNull @Min(0)
-    private Long numOfTransactions; // number of transactions
+//	@NotNull @Min(0)
+//    private Long numOfTransactions; // number of transactions
     
     @ManyToOne
     @JoinColumn(name = "bank_id")

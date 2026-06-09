@@ -23,7 +23,7 @@ public class ClientDTO {
 
 	
 	
-    private Long numOfTransactions; // number of transactions
+//    private Long numOfTransactions; // number of transactions
     
 
     private BankDTO bankDTO; 

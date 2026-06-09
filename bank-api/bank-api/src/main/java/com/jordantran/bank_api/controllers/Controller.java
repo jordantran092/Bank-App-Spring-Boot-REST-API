@@ -1,5 +1,7 @@
 package com.jordantran.bank_api.controllers;
 
+import java.util.Optional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +26,7 @@ public class Controller {
 		this.transactionMapper = transactionMapper;
 	}
 
-	@PostMapping(path = "/api/v1/bank")
+	@PostMapping(path = "/api/v1/bank/clients")
 	public ResponseEntity<ClientDTO> addClient(@RequestBody ClientDTO clientDTO) {
 		/*
 		 * bank.addclient will handle the business logic, not here
@@ -56,25 +58,32 @@ public class Controller {
 	
 	}
 	
-	@PatchMapping(path = "/api/v1/bank/{client_name}")
-	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO) {
+	@PatchMapping(path = "/api/v1/bank/clients/{clientName}")
+	public ResponseEntity<TransactionDTO> deposit(@RequestBody TransactionDTO transactionDTO, @PathVariable("clientName") String clientName) {
 		/*
 		 * Just re-use transaction entity, contains all the attributes you need, and in the http request leave the unnecessary attributes null. Return the updated client balance in the transaction (should be nested by default), can use for assertions
 		 */
+		
+		// Decided to re-use transaction object instead of making a separate object for this, contains all attributes we need. The rest of attributes can be left null since not needed
 		
 		ResponseEntity<TransactionDTO> result = null;
 		
 		
 		TransactionEntity transactionEntity = transactionMapper.mapFrom(transactionDTO); 
 		
-		TransactionEntity savedTransactionEntity = bankService.deposit(transactionEntity);
+		Optional<TransactionEntity> savedTransactionEntity = bankService.deposit(clientName, transactionEntity);
+		
+		if(savedTransactionEntity.isPresent()) {
+			
+			TransactionDTO savedTransactionDTO = transactionMapper.mapTo(savedTransactionEntity.get());
+			result = new ResponseEntity<>(savedTransactionDTO, HttpStatus.OK);
+		}
+		else {
+			result = new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		
 		
-	
-		TransactionDTO savedTransactionDTO = transactionMapper.mapTo(savedTransactionEntity);
-		result = new ResponseEntity<>(savedTransactionDTO, HttpStatus.OK);
 
-		
 		return result;
 	
 	}

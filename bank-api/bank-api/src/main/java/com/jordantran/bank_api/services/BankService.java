@@ -1,6 +1,7 @@
 package com.jordantran.bank_api.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,8 @@ public class BankService {
 	 */
 	public ClientEntity addClient(ClientEntity clientEntity) {
 
+		clientEntity.setId(null); // Set null to avoid hibernate thinking the id exists if not null and giving error, in case DTO had an id
+		
 		ClientEntity savedClientEntity = null;
 		
 		String name = clientEntity.getName();
@@ -46,6 +49,8 @@ public class BankService {
 		/*
 		 * higher prio is higher in the if chain, then just do else if.... as you go down, to create the priority 
 		 * 
+		 * 
+		 * Should handle input validation here because need to turnOnError as well, so not helpful to handle input validation in controller
 		 */
 		if(getClient(name) != null) { //rank 1
 			turnOnError(String.format("Error: Client %s already exists", name));
@@ -55,7 +60,7 @@ public class BankService {
 		}
 		else {
 			
-			clientEntity.setNumOfTransactions(0L);
+//			clientEntity.setNumOfTransactions(0L);
 			clientEntity.setBankEntity(bankRepository.findById(0L).get()); // value in the optional bank object
 			
 			savedClientEntity = clientService.save(clientEntity);
@@ -134,7 +139,7 @@ public class BankService {
 		return client;
 	}
 
-	public TransactionEntity deposit(TransactionEntity transactionEntity) {
+	public Optional<TransactionEntity> deposit(String clientName, TransactionEntity transactionEntity) {
 		/*
 		 
 		Client client = getClient(name);
@@ -152,9 +157,13 @@ public class BankService {
 		}
 		 */
 		
-		TransactionEntity savedTransactionEntity = null;
 		
-		String clientName = transactionEntity.getClientEntity().getName();
+		// Not mandatory here because not saving the transaction entity (simply using it to extract data from json body), but good practice to make sure unique identifier clientName passed from HTTP url path is authoritative so that the body's corresponding unique identifier follows it
+		transactionEntity.getClientEntity().setName(clientName);
+		
+		
+		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
+		
 		double amount = transactionEntity.getAmount();
 		
 		ClientEntity client = getClient(clientName);
@@ -166,9 +175,10 @@ public class BankService {
 			turnOnError("Error: Non-Positive Amount");
 		}
 		else {
+
 			
 			
-			savedTransactionEntity = clientService.deposit(client.getId(), amount);
+			savedTransactionEntity = Optional.of(clientService.deposit(client.getId(), amount));
 			
 			turnOffError();
 		}

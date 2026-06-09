@@ -1,6 +1,7 @@
 package com.jordantran.bank_api.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,12 @@ public class ClientService {
 
 	
 	private ClientRepository clientRepository;
+	private TransactionService transactionService;
 	
 	
-	public ClientService(ClientRepository clientRepository) {
+	public ClientService(ClientRepository clientRepository, TransactionService transactionService) {
 		this.clientRepository = clientRepository;
+		this.transactionService = transactionService;
 	}
 	
 	public long count() {
@@ -32,9 +35,37 @@ public class ClientService {
 	public List<ClientEntity> findAll() {
 		return clientRepository.findAll();
 	}
+	
+	public Optional<ClientEntity> findById(Long id) {
+		return clientRepository.findById(id);
+	}
 
 	public TransactionEntity deposit(Long id, double amount) {
-		// TODO Auto-generated method stub
+
+		
+		Optional<ClientEntity> optionalClient = findById(id);
+		
+		if(optionalClient.isPresent()) {
+			ClientEntity client = optionalClient.get();
+			
+			client.setBalance(client.getBalance() + amount);
+			
+			return transactionService.createTransaction("DEPOSIT", amount, client);
+			
+		}
+		else {
+			// should not happen because existence validated in BankService, but for extra caution
+			throw new RuntimeException("Client does not exist");
+		}
+		
 		
 	}
+	
+	
+	
+
+	
+	/* Helper Methods */
+
+	
 }
