@@ -18,24 +18,38 @@ import com.jordantran.bank_api.repositories.*;
 import com.jordantran.bank_api.services.*;
 
 @ExtendWith(MockitoExtension.class)
+
 class Tests {
 
+	
+	@Mock
+	ClientRepository clientRepository;
 	@Mock
 	BankRepository bankRepository;
+	@Mock
+	TransactionRepository transactionRepository;
+
 	@InjectMocks
 	BankService bankService;
-	
-	
-	@Mock 
-	TransactionRepository transactionRepository;
+	@InjectMocks
+	ClientService clientService;
 	@InjectMocks
 	TransactionService transactionService;
 	
 	
-	@Mock 
-	ClientRepository clientRepository;
-	@InjectMocks
-	ClientService clientService;
+	
+//	@Mock 
+//	TransactionRepository transactionRepository;
+//	@InjectMocks
+//	TransactionService transactionService;
+//	
+//	
+//	@Mock 
+//	ClientRepository clientRepository;
+//	@InjectMocks
+//	ClientService clientService;
+	
+	
 	
 	
 	
@@ -111,6 +125,7 @@ class Tests {
          * A client's statement summarizes
          * their current status followed by their history list of transactions.
          */
+        when(transactionRepository.findAll()).thenReturn(new ArrayList<>());
         List<String> stmt = clientService.getStatement(heeyeonID);
         List<String> expectedStmt1 = new ArrayList<>(List.of(clientService.getStatus(heeyeonID)));
         assertTrue(expectedStmt1.size() == 1); /* just the status */
@@ -118,6 +133,16 @@ class Tests {
 
 
         /* Assume: deposit amount always positive. No error checking needed.  */
+       	TransactionEntity t1 = TransactionEntity.builder()
+				.id(1L)
+				.transactionType("DEPOSIT")
+				.amount(20.3)
+				.clientEntity(heeyeonEntity)
+				.build();
+       	
+       	
+       	
+       	when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(t1);
         clientService.deposit(heeyeonID, 20.3);
         assertEquals("Heeyeon: $120.80", clientService.getStatus(heeyeonID));
         List<String> expectedStmt2 = new ArrayList<>(List.of(
@@ -125,10 +150,29 @@ class Tests {
         		"Transaction DEPOSIT: $20.30"
         		));
         assertTrue(expectedStmt2.size() == 2); /* status and one transaction */
+        
+        
+
+        when(transactionRepository.findAll()).thenReturn(new ArrayList<TransactionEntity>(
+        		List.of(t1)
+        ));
         assertTrue(expectedStmt2.equals(clientService.getStatement(heeyeonID)));
     	
 
+        
+        
+        
+        
         /* Assume: withdraw amount always positive and not too large. No error checking needed. */
+        
+       	TransactionEntity t2 = TransactionEntity.builder()
+				.id(2L)
+				.transactionType("WITHDRAW")
+				.amount(40.78)
+				.clientEntity(heeyeonEntity)
+				.build();
+       	
+       	when(transactionRepository.save(any(TransactionEntity.class))).thenReturn(t2);
         clientService.withdraw(heeyeonID, 40.78);
         assertEquals("Heeyeon: $80.02", clientService.getStatus(heeyeonID));
         List<String> expectedStmt3 = new ArrayList<>(List.of(
@@ -137,6 +181,9 @@ class Tests {
         		"Transaction WITHDRAW: $40.78"
         ));
         assertTrue(expectedStmt3.size() == 3); /* status and two transactions */
+        when(transactionRepository.findAll()).thenReturn(new ArrayList<TransactionEntity>(
+        		List.of(t1, t2)
+        ));
         assertTrue(expectedStmt3.equals(clientService.getStatement(heeyeonID)));
         
 
