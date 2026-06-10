@@ -1,5 +1,6 @@
 package com.jordantran.bank_api.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class ClientService {
 		return clientRepository.findById(id);
 	}
 	
-	public  ClientEntity getClient(String name) {
+	public ClientEntity getClient(String name) {
 		ClientEntity client = null;
 		
 		List<ClientEntity> clients = findAll();
@@ -52,7 +53,7 @@ public class ClientService {
 			foundClient = client.getName().equals(name);	
 		}
 		
-		//if not found account will return null, otherwise will mean account was found successfully and will be returned eventually
+		//if not found account, need to set return value back to null, otherwise will mean account was found successfully and will be returned eventually
 		if(!foundClient) { 
 			client = null;
 		}
@@ -101,12 +102,55 @@ public class ClientService {
 		
 		
 	}
+
+	public List<String> getStatement(Long clientID) {
+		
+		List<String> result = new ArrayList<>();
+		
+		
+		result.add(this.getStatus(clientID));
+		
+		
+		List<TransactionEntity> transactions = transactionService.findAll();
+		
+		for(TransactionEntity e : transactions) {
+			// if transaction has matching clientID
+			if(e.getId().equals(clientID)) {
+				
+				// add the transaction to result
+				Long transactionID = e.getId();
+				result.add(transactionService.getStatus(transactionID));
+			}
+		}
+		
+		return result;
+		
+
+	}
+	
+	public String getStatus(Long id) {
+		
+		Optional<ClientEntity> optionalClient = findById(id);
+		
+		if(optionalClient.isPresent()) {
+			ClientEntity client = optionalClient.get();
+			return String.format("%s: $%.2f", client.getName(), client.getBalance());
+		}
+		else {
+			throw new RuntimeException("Client does not exist");
+		}
+		
+	}
+
+
 	
 	
 	
 
 	
 	/* Helper Methods */
+
+	
 
 	
 }

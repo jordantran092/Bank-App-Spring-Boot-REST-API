@@ -32,6 +32,18 @@ public class BankService {
 	public long count() {
 		return bankRepository.count();
 	}
+	
+	public BankEntity getBank() {
+		Optional<BankEntity> optionalBankEntity = bankRepository.findById(0L);
+		
+		if(optionalBankEntity.isPresent()) {
+			return optionalBankEntity.get();
+		}
+		else {
+			// Should not happen since bank initialized in dataloader, but in case
+			throw new RuntimeException("Bank does not exist");
+		}
+	}
 
 	
 	/*
@@ -62,7 +74,7 @@ public class BankService {
 		else {
 			
 //			clientEntity.setNumOfTransactions(0L);
-			clientEntity.setBankEntity(bankRepository.findById(0L).get()); // value in the optional bank object
+			clientEntity.setBankEntity(getBank());
 			
 			savedClientEntity = clientService.save(clientEntity);
 			
@@ -187,6 +199,74 @@ public class BankService {
 	}
 	
 	
+
+	public Optional<List<String>> getStatement(String clientName) {
+		
+		
+		Optional<List<String>> result = Optional.empty();
+		
+		ClientEntity client = clientService.getClient(clientName);
+		
+		if(client != null) {
+			result = Optional.of(clientService.getStatement(client.getId()));
+		}
+		else { //result will stay null
+			turnOnError(String.format("Error: From-Account %s does not exist", clientName));
+
+		}
+		
+		
+		return result;
+		
+	}
+	
+	
+	public String getStatus() {
+		String result = "";
+		
+		BankEntity bank = getBank();
+		
+		boolean error = bank.isError();
+		String errorStr = bank.getErrorStr();
+		
+		
+		/*
+		 * 
+		 */
+		if(!error) {
+			
+			
+			List<ClientEntity> clients = clientService.findAll();
+			
+			
+			
+			int i = 0;
+			for(ClientEntity e : clients) {
+				Long clientID = e.getId();
+				
+				result += String.format("%s", clientService.getStatus(clientID));
+				
+				if(i < clients.size()-1) {
+					result += ", ";
+				}
+				
+				++i;
+				
+			}
+			result = String.format("Accounts: {%s}", result);
+			
+
+			
+		}
+		else {
+			result = errorStr;
+		}
+		return result; 
+		
+
+	}
+	
+	
 	
 	
 	
@@ -230,6 +310,9 @@ public class BankService {
 	
 		
 	}
+
+
+
 	
 	
 

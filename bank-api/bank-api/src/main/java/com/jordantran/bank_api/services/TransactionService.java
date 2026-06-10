@@ -2,6 +2,9 @@ package com.jordantran.bank_api.services;
 
 
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.jordantran.bank_api.domain.entities.*;
@@ -38,20 +41,35 @@ public class TransactionService {
 		
 		return save(transaction);
 	}
+
+	public List<TransactionEntity> findAll() {
+		return transactionRepository.findAll();
+	}
+	
+	private Optional<TransactionEntity> findById(Long id) {
+		return transactionRepository.findById(id);
+	}
 	
 	
-//	public List<ClientEntity> findAll() {
-//		return clientRepository.findAll();
-//	}
-	
-//	public Optional<ClientEntity> findById(Long id) {
-//		return clientRepository.findById(id);
-//	}
+    /*
+     * Returns status of a transaction in terms of transaction type and amount
+     */
+    public String getStatus(Long id) {
+    	
+    	Optional<TransactionEntity> optionalTransactionEntity = findById(id);
+    	
+    	if(optionalTransactionEntity.isPresent()) {
+    		TransactionEntity transaction = optionalTransactionEntity.get();
+    		return String.format("Transaction %s: $%.2f", transaction.getTransactionType(), transaction.getAmount());
+    	}
+    	else {
+    		throw new RuntimeException("Transaction does not exist");
+    	}
+    	
+//        
+    }
 
 
-	
-	
-	
 	
 	
 	

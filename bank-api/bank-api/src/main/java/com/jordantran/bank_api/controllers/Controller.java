@@ -136,4 +136,75 @@ public class Controller {
 		return result;
 	
 	}
+	
+	
+	
+	@GetMapping(path = "/api/v1/bank/clients/{clientName}")
+	public ResponseEntity<GetStatementDTO> getStatement(@PathVariable("clientName") String clientName) {
+		ResponseEntity<GetStatementDTO> result = null;
+		
+		
+		Optional<List<String>> optionalStatement = bankService.getStatement(clientName);
+		
+		
+		if(optionalStatement.isPresent()) {
+			
+			// Store the statement in the DTO for http response
+			GetStatementDTO getStatementDTO = GetStatementDTO.builder()
+					.statement(optionalStatement.get())
+					.build();
+			
+			result = new ResponseEntity<>(getStatementDTO, HttpStatus.OK);
+		}
+		else {
+			result = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		
+		return result;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@GetMapping(path = "/api/v1/bank/status")
+	public ResponseEntity<BankStatusDTO> getStatus() {
+		ResponseEntity<BankStatusDTO> result = null;
+		
+		
+		String status = bankService.getStatus();
+		
+		BankStatusDTO bankStatusDTO = BankStatusDTO.builder()
+				.status(status)
+				.build();
+		
+		result = new ResponseEntity<>(bankStatusDTO, HttpStatus.OK);
+		
+		return result;
+		
+	}
+	
 }

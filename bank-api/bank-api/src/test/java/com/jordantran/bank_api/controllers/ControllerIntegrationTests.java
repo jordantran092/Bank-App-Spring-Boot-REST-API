@@ -27,13 +27,11 @@ import com.jordantran.bank_api.services.*;
 @AutoConfigureMockMvc
 class ControllerIntegrationTests {
 	
-	private BankService bankService;
 	private ObjectMapper objectMapper;
 	private MockMvc mockMvc;
 	
 	@Autowired
 	public ControllerIntegrationTests(BankService bankService, ObjectMapper objectMapper, MockMvc mockMvc) {
-		this.bankService = bankService;
 		this.objectMapper = new ObjectMapper();
 		this.mockMvc = mockMvc;
 	}
@@ -41,19 +39,372 @@ class ControllerIntegrationTests {
 	
 	//----------------------------------
 	
+	
+	/* Get Bank Status */
+	
+	@Test
+	void testThatGetBankStatusReturnsHttp200() throws Exception {
+
+
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/status")
+        ).andExpect(
+        		// check status of http response result for 200 ok
+                MockMvcResultMatchers.status().isOk()
+        );
+
+	}
+	
+	@Test
+	void testThatGetBankStatusReturnsSuccessfullyWithNoClients() throws Exception {
+
+        
+        
+        // Get bank status
+        
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/status")
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {}")
+        );
+
+    
+	}
+	
+	@Test
+	void testThatGetBankStatusReturnsSuccessfullyWithDeposit() throws Exception {
+
+
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
+		
+		
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        );
+		
+		
+        // Deposit
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        );
+        
+        
+        // Get bank status
+        
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/status")
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $30.50}")
+        );
+
+    
+	}
+	
+	
+	
+	/* Get Statement */
+	
+	@Test
+	void testThatGetStatementReturnsHttp200() throws Exception {
+
+
+		
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
+		
+		
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        );
+		
+		
+        // Deposit
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        );
+        
+        
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
+        ).andExpect(
+        		// check status of http response result for 200 ok
+                MockMvcResultMatchers.status().isOk()
+        );
+
+	}
+	
+	@Test
+	void testThatGetStatementReturnsStatement() throws Exception {
+
+
+		
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
+		String clientJson = objectMapper.writeValueAsString(clientDTO);
+		
+		
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientJson)
+        );
+		
+		
+        // Deposit
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/" + clientDTO.getName())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        );
+        
+        
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $30.50")
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $10.20") 
+        );
+        
+        
+
+	}
+	
+	
+	@Test
+	void testThatGetStatementReturnsHttp404WhenClientNotExist() throws Exception {
+
+
+		
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
+		
+	
+        
+        
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
+        ).andExpect(
+        		// check status of http response result for http conflict
+                MockMvcResultMatchers.status().isNotFound()
+        );
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* Transfers */
+	
+	@Test
+	void testThatTransferReturnsHttp200() throws Exception {
+
+	
+		
+		ClientDTO clientA_DTO = TestDataUtil.createClientA_DTO();
+		String clientA_Json = objectMapper.writeValueAsString(clientA_DTO);
+		
+		ClientDTO clientB_DTO = TestDataUtil.createClientB_DTO();
+		String clientB_Json = objectMapper.writeValueAsString(clientB_DTO);
+		
+		
+		TransactionTransferDTO transactionDTO = TestDataUtil.createTransactionTransferA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client A
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientA_Json)
+        );
+        
+		// Create client B
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientB_Json)
+        );
+		
+		
+        // Transfer
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/bulk")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		// check status of http response result for 200 ok
+                MockMvcResultMatchers.status().isOk()
+        );
+	}
+	
+	
+	@Test
+	void testThatTransferReturnsSavedTransactions() throws Exception {
+
+	
+		
+		ClientDTO clientA_DTO = TestDataUtil.createClientA_DTO();
+		String clientA_Json = objectMapper.writeValueAsString(clientA_DTO);
+		
+		ClientDTO clientB_DTO = TestDataUtil.createClientB_DTO();
+		String clientB_Json = objectMapper.writeValueAsString(clientB_DTO);
+		
+		
+		TransactionTransferDTO transactionDTO = TestDataUtil.createTransactionTransferA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client A
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientA_Json)
+        );
+        
+		// Create client B
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientB_Json)
+        );
+		
+		
+        // Transfer
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/bulk")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[0].id").isNumber()
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[0].transactionType").value("WITHDRAW")  
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[0].amount").value(5)
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[0].clientDTO.name").value("John")
+        		
+        		
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[1].id").isNumber()
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[1].transactionType").value("DEPOSIT")  
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[1].amount").value(5)
+        ).andExpect(
+        		MockMvcResultMatchers.jsonPath("$[1].clientDTO.name").value("Bob")
+        );
+	}
+	
+	@Test
+	void testThatTransferReturnsHttpConflictWhenReceiverClientNotExist() throws Exception {
+
+	
+		
+		ClientDTO clientA_DTO = TestDataUtil.createClientA_DTO();
+		String clientA_Json = objectMapper.writeValueAsString(clientA_DTO);
+		
+		
+		
+		TransactionTransferDTO transactionDTO = TestDataUtil.createTransactionTransferA_DTO();
+		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
+	
+		
+		// Create client A
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.post("/api/v1/bank/clients")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(clientA_Json)
+        );
+      
+		
+		
+        // Transfer
+        mockMvc.perform(
+        		// call post method, with type json, and json body
+                MockMvcRequestBuilders.patch("/api/v1/bank/clients/bulk")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(transactionJson)
+        ).andExpect(
+        		// check status of http response result for http conflict
+                MockMvcResultMatchers.status().isConflict()
+        );
+	}
+
+	
+	
+	
+	
+	
+
+	
+	
+	
 	/* Withdrawals */
 	
 	@Test
 	void testThatWithdrawReturnsHttp200() throws Exception {
 
 		
-		// No need bank dto, can leave null
+		// No need bank dto, can leave null, testing status
 		
-		ClientDTO clientDTO = TestDataUtil.createClientA();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -81,15 +432,12 @@ class ControllerIntegrationTests {
 	@Test
 	void testThatWithdrawReturnsSavedTransactionWithdraw() throws Exception {
 
-
 		
-		// No need bank dto, can leave null
-		
-		ClientDTO clientDTO = TestDataUtil.createClientA();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -131,7 +479,7 @@ class ControllerIntegrationTests {
 
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionWithdrawA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 		
 		
@@ -169,11 +517,11 @@ class ControllerIntegrationTests {
 		
 		// No need bank dto, can leave null
 		
-		ClientDTO clientDTO = TestDataUtil.createClientA();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -205,11 +553,11 @@ class ControllerIntegrationTests {
 		
 		// No need bank dto, can leave null
 		
-		ClientDTO clientDTO = TestDataUtil.createClientA();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO();
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 	
 		
@@ -248,7 +596,7 @@ class ControllerIntegrationTests {
 
 		
 		
-		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA();
+		TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
 		
 		
@@ -279,8 +627,8 @@ class ControllerIntegrationTests {
 	void testThatClientCreationReturnsHttp201() throws Exception {
 
 		
-		BankDTO bankDTO = TestDataUtil.createBank();
-		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
+		BankDTO bankDTO = TestDataUtil.createBank_DTO();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO(bankDTO);
 		
 		
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
@@ -301,8 +649,8 @@ class ControllerIntegrationTests {
 	void testThatClientCreationReturnsSavedClient() throws Exception {
 
 		
-		BankDTO bankDTO = TestDataUtil.createBank();
-		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
+		BankDTO bankDTO = TestDataUtil.createBank_DTO();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO(bankDTO);
 		
 		
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
@@ -332,9 +680,9 @@ class ControllerIntegrationTests {
 	void testThatClientCreationReturnsHttpConflictWhenClientExists() throws Exception {
 
 		
-		BankDTO bankDTO = TestDataUtil.createBank();
-		ClientDTO clientDTO = TestDataUtil.createClientA(bankDTO);
-		ClientDTO clientDTO2 = TestDataUtil.createClientA(bankDTO);
+		BankDTO bankDTO = TestDataUtil.createBank_DTO();
+		ClientDTO clientDTO = TestDataUtil.createClientA_DTO(bankDTO);
+		ClientDTO clientDTO2 = TestDataUtil.createClientA_DTO(bankDTO);
 		
 		
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
