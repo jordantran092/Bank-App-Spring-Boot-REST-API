@@ -164,32 +164,9 @@ public class Controller {
 		return result;
 		
 	}
+
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	@GetMapping(path = "/api/v1/bank/status")
 	public ResponseEntity<BankStatusDTO> getStatus() {
 		ResponseEntity<BankStatusDTO> result = null;
