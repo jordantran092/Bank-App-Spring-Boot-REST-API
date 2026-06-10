@@ -39,6 +39,26 @@ public class ClientService {
 	public Optional<ClientEntity> findById(Long id) {
 		return clientRepository.findById(id);
 	}
+	
+	public  ClientEntity getClient(String name) {
+		ClientEntity client = null;
+		
+		List<ClientEntity> clients = findAll();
+		
+		
+		boolean foundClient = false;
+		for(int i = 0; !foundClient && i < clients.size(); i++) {
+			client = clients.get(i);
+			foundClient = client.getName().equals(name);	
+		}
+		
+		//if not found account will return null, otherwise will mean account was found successfully and will be returned eventually
+		if(!foundClient) { 
+			client = null;
+		}
+		
+		return client;
+	}
 
 	public TransactionEntity deposit(Long id, double amount) {
 

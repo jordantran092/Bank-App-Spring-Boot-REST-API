@@ -1,5 +1,6 @@
 package com.jordantran.bank_api.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +53,7 @@ public class BankService {
 		 * 
 		 * Should handle input validation here because need to turnOnError as well, so not helpful to handle input validation in controller
 		 */
-		if(getClient(name) != null) { //rank 1
+		if(clientService.getClient(name) != null) { //rank 1
 			turnOnError(String.format("Error: Client %s already exists", name));
 		}
 		else if(amount <= 0) { //rank 2
@@ -86,7 +87,7 @@ public class BankService {
 		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
 		
 		
-		ClientEntity client = getClient(clientName);
+		ClientEntity client = clientService.getClient(clientName);
 		
 		if(client == null) { //rank1
 			turnOnError(String.format("Error: From-Account %s does not exist", clientName));
@@ -119,7 +120,7 @@ public class BankService {
 		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
 		
 		
-		ClientEntity client = getClient(clientName);
+		ClientEntity client = clientService.getClient(clientName);
 		
 		if(client == null) { //rank1
 			turnOnError(String.format("Error: To-Account %s does not exist", clientName));
@@ -138,6 +139,50 @@ public class BankService {
 		
 		
 		return savedTransactionEntity;
+		
+	}
+	
+	
+	
+	
+	public Optional<List<TransactionEntity>> transfer(String fromName, String toName, double amount) {
+
+		
+		Optional<List<TransactionEntity>> optionalSavedTransactionEntities = Optional.empty();
+		
+		
+		ClientEntity fromClient = clientService.getClient(fromName);
+		ClientEntity toClient = clientService.getClient(toName);
+		
+		if(fromClient == null) {
+			turnOnError(String.format("Error: From-Account %s does not exist", fromName));
+		}
+		else if(toClient == null) {
+			turnOnError(String.format("Error: To-Account %s does not exist", toName));
+		}
+		else if(amount <= 0) {
+			turnOnError("Error: Non-Positive Amount");
+		}
+		else if(amount > fromClient.getBalance()) {
+			turnOnError("Error: Amount too large to transfer");
+
+		}
+		else {
+			List<TransactionEntity> savedTransactionEntities = new ArrayList<>();
+			
+			savedTransactionEntities.add(clientService.withdraw(fromClient.getId(), amount));
+			savedTransactionEntities.add(clientService.deposit(toClient.getId(), amount));
+			
+			optionalSavedTransactionEntities = Optional.of(savedTransactionEntities);
+			
+			turnOffError();
+		}
+		
+		
+		
+	
+		return optionalSavedTransactionEntities;
+
 		
 	}
 	
@@ -187,25 +232,7 @@ public class BankService {
 	}
 	
 	
-	private ClientEntity getClient(String name) {
-		ClientEntity client = null;
-		
-		List<ClientEntity> clients = clientService.findAll();
-		
-		
-		boolean foundClient = false;
-		for(int i = 0; !foundClient && i < clients.size(); i++) {
-			client = clients.get(i);
-			foundClient = client.getName().equals(name);	
-		}
-		
-		//if not found account will return null, otherwise will mean account was found successfully and will be returned eventually
-		if(!foundClient) { 
-			client = null;
-		}
-		
-		return client;
-	}
+
 	
 
 	

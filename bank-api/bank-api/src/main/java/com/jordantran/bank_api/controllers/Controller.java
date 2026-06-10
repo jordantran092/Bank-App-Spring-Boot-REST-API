@@ -1,5 +1,7 @@
 package com.jordantran.bank_api.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -100,30 +102,30 @@ public class Controller {
 	
 	
 	
-	@PatchMapping(path = "/api/v1/bank/clients/?fromName={fromName}&toName={toName}")
-	public ResponseEntity<TransactionTransferDTO> transfer(@RequestBody TransactionTransferDTO transactionTransferDTO, @PathVariable("fromName") String fromName, @PathVariable("toName") String toName) {
+	// bulk to still indicate updating single clients resource, but a bulk of client resources i.e. 2 clients declared in the json body
+	@PatchMapping(path = "/api/v1/bank/clients/bulk")
+	public ResponseEntity<List<TransactionDTO>> transfer(@RequestBody TransactionTransferDTO transactionTransferDTO) {
 
 		
-		ResponseEntity<TransactionTransferDTO> result = null;
+		ResponseEntity<List<TransactionDTO>> result = null;
 		
+		 
+		Optional<List<TransactionEntity>> optionalSavedTransactionEntities = Optional.empty();
 		
-		TransactionEntity transactionEntity = transactionMapper.mapFrom(transactionDTO); 
+	
+		optionalSavedTransactionEntities = bankService.transfer(transactionTransferDTO.getFromName(), transactionTransferDTO.getToName(), transactionTransferDTO.getAmount());	
+	
 		
-		Optional<TransactionEntity> savedTransactionEntity = Optional.empty();
-		
-		
-		if(transactionDTO.getTransactionType().equals("DEPOSIT")) {
-			savedTransactionEntity = bankService.deposit(clientName, transactionEntity);	
-		}
-		else if(transactionDTO.getTransactionType().equals("WITHDRAW")) {
-			savedTransactionEntity = bankService.withdraw(clientName, transactionEntity);	
-		}
-		
-		
-		if(savedTransactionEntity.isPresent()) {
+		if(optionalSavedTransactionEntities.isPresent()) {
 			
-			TransactionDTO savedTransactionDTO = transactionMapper.mapTo(savedTransactionEntity.get());
-			result = new ResponseEntity<>(savedTransactionDTO, HttpStatus.OK);
+			List<TransactionDTO> savedTransactionDTOs = new ArrayList<>();
+		
+			
+			for(TransactionEntity e : optionalSavedTransactionEntities.get()) {
+				savedTransactionDTOs.add(transactionMapper.mapTo(e));
+			}
+			
+			result = new ResponseEntity<>(savedTransactionDTOs, HttpStatus.OK);
 		}
 		else {
 			result = new ResponseEntity<>(HttpStatus.CONFLICT);
