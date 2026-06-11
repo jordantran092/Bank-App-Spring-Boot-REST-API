@@ -62,7 +62,7 @@ class ServiceIntegrationTests {
         
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
         		MockMvcResultMatchers.status().isNotFound()
         );
@@ -72,7 +72,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Heeyeon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account John does not exist")
         );
         
         
@@ -83,7 +83,7 @@ class ServiceIntegrationTests {
 		TransactionDepositWithdrawDTO transactionDTO = TransactionDepositWithdrawDTO.builder()
 				.transactionType("DEPOSIT")
 				.amount(300.05)
-				.name("Heeyeon")
+				.name("John")
 				.build();
 	
 		String transactionJson = objectMapper.writeValueAsString(transactionDTO);
@@ -100,12 +100,12 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account Heeyeon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account John does not exist")
         );
         
         
         transactionDTO.setAmount(-300.05);
-        transactionDTO.setName("Jiyoon");
+        transactionDTO.setName("Bob");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Deposit        
@@ -122,7 +122,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account Jiyoon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account Bob does not exist")
         );
         
         
@@ -131,7 +131,7 @@ class ServiceIntegrationTests {
         
         transactionDTO.setTransactionType("WITHDRAW");
         transactionDTO.setAmount(10.5);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Withdraw     
@@ -147,13 +147,13 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Heeyeon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account John does not exist")
         );
         
         
         transactionDTO.setTransactionType("WITHDRAW");
         transactionDTO.setAmount(-300.05);
-        transactionDTO.setName("Jiyoon");
+        transactionDTO.setName("Bob");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         
@@ -169,7 +169,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Jiyoon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Bob does not exist")
         );
         
 
@@ -180,8 +180,8 @@ class ServiceIntegrationTests {
         
 		TransactionTransferDTO transactionTransferDTO = TransactionTransferDTO.builder()
 					.amount(100.24)
-					.fromName("Heeyeon")
-					.toName("Jiyoon")
+					.fromName("John")
+					.toName("Bob")
 					.build();
 		
 		String transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
@@ -199,15 +199,15 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Heeyeon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account John does not exist")
         );
         
         
         
       
         transactionTransferDTO.setAmount(-100.24);
-        transactionTransferDTO.setFromName("Jiyoon");
-        transactionTransferDTO.setToName("Heeyeon");
+        transactionTransferDTO.setFromName("Bob");
+        transactionTransferDTO.setToName("John");
         transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
         
 		// Transfer
@@ -222,7 +222,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Jiyoon does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Bob does not exist")
         );
         
 
@@ -237,7 +237,7 @@ class ServiceIntegrationTests {
 		
 
 		ClientDTO clientDTO = TestDataUtil.createClientB_DTO();
-		clientDTO.setName("Heeyeon");
+		clientDTO.setName("John");
 		clientDTO.setBalance(-23.5);
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -257,7 +257,7 @@ class ServiceIntegrationTests {
         );
         
         
-		clientDTO.setName("Heeyeon");
+		clientDTO.setName("John");
 		clientDTO.setBalance(0);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -280,7 +280,7 @@ class ServiceIntegrationTests {
         // --------------------------
 		
         
-		clientDTO.setName("Heeyeon");
+		clientDTO.setName("John");
 		clientDTO.setBalance(213.4);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -296,7 +296,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $213.40}")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $213.40}")
         );
         
         
@@ -307,18 +307,18 @@ class ServiceIntegrationTests {
         
         
         // Get statement
-        /* The added account Heeyeon has no transactions yet. */
+        /* The added account John has no transactions yet. */
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $213.40")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $213.40")
         );
         
         
         /* Names of clients are case-sensitive. */
 
 
-		clientDTO.setName("Heeyeon");
+		clientDTO.setName("John");
 		clientDTO.setBalance(134.56);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -334,7 +334,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: Client Heeyeon already exists")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: Client John already exists")
         );
         
         
@@ -343,7 +343,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $213.40")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $213.40")
         );
         
         
@@ -352,7 +352,7 @@ class ServiceIntegrationTests {
         TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
         transactionDTO.setTransactionType("DEPOSIT");
         transactionDTO.setAmount(-238.29);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         String transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Deposit        
@@ -377,7 +377,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $213.40")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $213.40")
         );
         
         
@@ -390,7 +390,7 @@ class ServiceIntegrationTests {
        
         transactionDTO.setTransactionType("DEPOSIT");
         transactionDTO.setAmount(0);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Deposit        
@@ -415,7 +415,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $213.40")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $213.40")
         );
         
         
@@ -430,7 +430,7 @@ class ServiceIntegrationTests {
         
         
         
-		clientDTO.setName("Jiyoon");
+		clientDTO.setName("Bob");
 		clientDTO.setBalance(239.4);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -442,7 +442,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Sunhye");
+		clientDTO.setName("Matt");
 		clientDTO.setBalance(332.6);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -454,7 +454,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Jihye");
+		clientDTO.setName("Clark");
 		clientDTO.setBalance(428.8);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -472,12 +472,12 @@ class ServiceIntegrationTests {
         /* at this point, the bank is not full yet */
 
 
-		clientDTO.setName("Jihye");
+		clientDTO.setName("Clark");
 		clientDTO.setBalance(81.72);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
 		// Add Client
-		/* here Jihye is a duplicate name */
+		/* here Clark is a duplicate name */
         mockMvc.perform(
         		// call post method, with type json, and json body
                 MockMvcRequestBuilders.post("/api/v1/bank/clients")
@@ -489,7 +489,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: Client Jihye already exists")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: Client Clark already exists")
         );
         
         // Get statement
@@ -497,7 +497,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Jihye: $428.80")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Clark: $428.80")
         );
         
         
@@ -507,7 +507,7 @@ class ServiceIntegrationTests {
         /* Add clients to gradually */
         
         
-		clientDTO.setName("Suyeon");
+		clientDTO.setName("Garrett");
 		clientDTO.setBalance(590.10);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -520,7 +520,7 @@ class ServiceIntegrationTests {
         );
         
         
-		clientDTO.setName("Yuna");
+		clientDTO.setName("Michael");
 		clientDTO.setBalance(640.12);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -536,7 +536,7 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $213.40, Jiyoon: $239.40, Sunhye: $332.60, Jihye: $428.80, Suyeon: $590.10, Yuna: $640.12}")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $213.40, Bob: $239.40, Matt: $332.60, Clark: $428.80, Garrett: $590.10, Michael: $640.12}")
         );
         
         
@@ -552,14 +552,14 @@ class ServiceIntegrationTests {
         // Get statement
  
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Alan")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Kerr")
         );
         
         // Get bank status
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Alan does not exist")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Kerr does not exist")
         );
         
 		
@@ -594,7 +594,7 @@ class ServiceIntegrationTests {
 	void test_03c() throws Exception {
 
 		ClientDTO clientDTO = TestDataUtil.createClientB_DTO();
-		clientDTO.setName("Heeyeon");
+		clientDTO.setName("John");
 		clientDTO.setBalance(213.4);
 		String clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -606,7 +606,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Jiyoon");
+		clientDTO.setName("Bob");
 		clientDTO.setBalance(239.4);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -619,7 +619,7 @@ class ServiceIntegrationTests {
         );
         
         
-		clientDTO.setName("Sunhye");
+		clientDTO.setName("Matt");
 		clientDTO.setBalance(332.6);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -631,7 +631,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Jihye");
+		clientDTO.setName("Clark");
 		clientDTO.setBalance(428.8);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -643,7 +643,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Suyeon");
+		clientDTO.setName("Garrett");
 		clientDTO.setBalance(590.10);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -655,7 +655,7 @@ class ServiceIntegrationTests {
                         .content(clientJson)
         );
         
-		clientDTO.setName("Yuna");
+		clientDTO.setName("Michael");
 		clientDTO.setBalance(640.12);
 		clientJson = objectMapper.writeValueAsString(clientDTO);
 	
@@ -668,12 +668,12 @@ class ServiceIntegrationTests {
         );
 	
 
-        /* at this point, Heeyeon's account balance is $213.40 */
+        /* at this point, John's account balance is $213.40 */
         
         TransactionDepositWithdrawDTO transactionDTO = TestDataUtil.createTransactionDepositA_DTO();
         transactionDTO.setTransactionType("DEPOSIT");
         transactionDTO.setAmount(238.29);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         String transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Deposit        
@@ -691,14 +691,14 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $451.69, Jiyoon: $239.40, Sunhye: $332.60, Jihye: $428.80, Suyeon: $590.10, Yuna: $640.12}")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $451.69, Bob: $239.40, Matt: $332.60, Clark: $428.80, Garrett: $590.10, Michael: $640.12}")
         );
         
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $451.69")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $451.69")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         );
@@ -712,7 +712,7 @@ class ServiceIntegrationTests {
         
         transactionDTO.setTransactionType("DEPOSIT");
         transactionDTO.setAmount(-489.74);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Deposit        
@@ -734,22 +734,22 @@ class ServiceIntegrationTests {
         );
         
         // Get statement
-        /* Heeyeon's statement remains the same from before the error */
+        /* John's statement remains the same from before the error */
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $451.69")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $451.69")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         );
         
         
-        /* at this point, Heeyeon's account balance is 451.69 */
+        /* at this point, John's account balance is 451.69 */
         
         
         transactionDTO.setTransactionType("WITHDRAW");
         transactionDTO.setAmount(-89.74);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Withdraw
@@ -771,11 +771,11 @@ class ServiceIntegrationTests {
         );
         
         // Get statement
-        /* Heeyeon's statement remains the same from before the error */
+        /* John's statement remains the same from before the error */
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $451.69")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $451.69")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         );
@@ -789,7 +789,7 @@ class ServiceIntegrationTests {
         
         transactionDTO.setTransactionType("WITHDRAW");
         transactionDTO.setAmount(453.74);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Withdraw
@@ -811,24 +811,24 @@ class ServiceIntegrationTests {
         );
         
         // Get statement
-        /* Heeyeon's statement remains the same from before the error */
+        /* John's statement remains the same from before the error */
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $451.69")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $451.69")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         );
         
         
-        /* at this point, Heeyeon's account balance is 451.69 */
+        /* at this point, John's account balance is 451.69 */
         
         
         
         
         transactionDTO.setTransactionType("WITHDRAW");
         transactionDTO.setAmount(139.37);
-        transactionDTO.setName("Heeyeon");
+        transactionDTO.setName("John");
         transactionJson = objectMapper.writeValueAsString(transactionDTO);
         
         // Withdraw
@@ -846,15 +846,15 @@ class ServiceIntegrationTests {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/status")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $312.32, Jiyoon: $239.40, Sunhye: $332.60, Jihye: $428.80, Suyeon: $590.10, Yuna: $640.12}")
+        		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $312.32, Bob: $239.40, Matt: $332.60, Clark: $428.80, Garrett: $590.10, Michael: $640.12}")
         );
         
         // Get statement
-        /* Heeyeon's statement remains the same from before the error */
+        /* John's statement remains the same from before the error */
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $312.32")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $312.32")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         ).andExpect(
@@ -863,12 +863,12 @@ class ServiceIntegrationTests {
         
         
         
-        /* at this point, Heeyeon's account balance is 312.32 */
+        /* at this point, John's account balance is 312.32 */
 
 		TransactionTransferDTO transactionTransferDTO = TransactionTransferDTO.builder()
 				.amount(-234.23)
-				.fromName("Alan")
-				.toName("Mark")
+				.fromName("Kerr")
+				.toName("Fred")
 				.build();
 	
 		String transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
@@ -887,15 +887,15 @@ class ServiceIntegrationTests {
 	    mockMvc.perform(
 	            MockMvcRequestBuilders.get("/api/v1/bank/status")
 	    ).andExpect(
-	    		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Alan does not exist")
+	    		MockMvcResultMatchers.jsonPath("$.status").value("Error: From-Account Kerr does not exist")
 	    );
 	    
 	    
 	    
 	  
 	    transactionTransferDTO.setAmount(-234.23);
-	    transactionTransferDTO.setFromName("Heeyeon");
-	    transactionTransferDTO.setToName("Mark");
+	    transactionTransferDTO.setFromName("John");
+	    transactionTransferDTO.setToName("Fred");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
@@ -911,15 +911,15 @@ class ServiceIntegrationTests {
 	    mockMvc.perform(
 	            MockMvcRequestBuilders.get("/api/v1/bank/status")
 	    ).andExpect(
-	    		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account Mark does not exist")
+	    		MockMvcResultMatchers.jsonPath("$.status").value("Error: To-Account Fred does not exist")
 	    );
 	    
 	    
 	    
 	    
 	    transactionTransferDTO.setAmount(0);
-	    transactionTransferDTO.setFromName("Heeyeon");
-	    transactionTransferDTO.setToName("Yuna");
+	    transactionTransferDTO.setFromName("John");
+	    transactionTransferDTO.setToName("Michael");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
@@ -943,8 +943,8 @@ class ServiceIntegrationTests {
 	    
 	    
 	    transactionTransferDTO.setAmount(-234.23);
-	    transactionTransferDTO.setFromName("Heeyeon");
-	    transactionTransferDTO.setToName("Yuna");
+	    transactionTransferDTO.setFromName("John");
+	    transactionTransferDTO.setToName("Michael");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
@@ -967,8 +967,8 @@ class ServiceIntegrationTests {
 	    
 	    
 	    transactionTransferDTO.setAmount(313.48);
-	    transactionTransferDTO.setFromName("Heeyeon");
-	    transactionTransferDTO.setToName("Yuna");
+	    transactionTransferDTO.setFromName("John");
+	    transactionTransferDTO.setToName("Michael");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
@@ -991,16 +991,16 @@ class ServiceIntegrationTests {
         /* after each of the above transfer errors, the bank's status is unchanged from the last withdrawal
          * 
          * 
-         * at this point, Heeyeon's account balance remains 312.32 and Yuna's account balance remains 640.12  		*/
+         * at this point, John's account balance remains 312.32 and Michael's account balance remains 640.12  		*/
         
         
 	    transactionTransferDTO.setAmount(50);
-	    transactionTransferDTO.setFromName("Heeyeon");
-	    transactionTransferDTO.setToName("Yuna");
+	    transactionTransferDTO.setFromName("John");
+	    transactionTransferDTO.setToName("Michael");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
-	    /* a WITHDRAW transaction added to Heeyeon and a DEPOSIT transaction added to Yuna */
+	    /* a WITHDRAW transaction added to John and a DEPOSIT transaction added to Michael */
 	    mockMvc.perform(
 	    		// call post method, with type json, and json body
 	            MockMvcRequestBuilders.patch("/api/v1/bank/clients/bulk")
@@ -1012,15 +1012,15 @@ class ServiceIntegrationTests {
 	    mockMvc.perform(
 	            MockMvcRequestBuilders.get("/api/v1/bank/status")
 	    ).andExpect(
-	    		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $262.32, Jiyoon: $239.40, Sunhye: $332.60, Jihye: $428.80, Suyeon: $590.10, Yuna: $690.12}")
+	    		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $262.32, Bob: $239.40, Matt: $332.60, Clark: $428.80, Garrett: $590.10, Michael: $690.12}")
 	    );
 	    
 	    
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $262.32")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $262.32")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
         ).andExpect(
@@ -1032,25 +1032,25 @@ class ServiceIntegrationTests {
         
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Yuna")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Michael")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Yuna: $690.12")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Michael: $690.12")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $50.00")
         );
 	    
         
         
-        /* at this point, Heeyeon's account balance is 262.32 and Yuna's account balance is 690.12  */
+        /* at this point, John's account balance is 262.32 and Michael's account balance is 690.12  */
 	    
         
 	    transactionTransferDTO.setAmount(30);
-	    transactionTransferDTO.setFromName("Yuna");
-	    transactionTransferDTO.setToName("Heeyeon");
+	    transactionTransferDTO.setFromName("Michael");
+	    transactionTransferDTO.setToName("John");
 	    transactionTransferJson = objectMapper.writeValueAsString(transactionTransferDTO);
 	    
 		// Transfer
-	    /* a WITHDRAW transaction added to Yuna and a DEPOSIT transaction added to Heeyeon */
+	    /* a WITHDRAW transaction added to Michael and a DEPOSIT transaction added to John */
 	    
 	    mockMvc.perform(
 	    		// call post method, with type json, and json body
@@ -1063,15 +1063,15 @@ class ServiceIntegrationTests {
 	    mockMvc.perform(
 	            MockMvcRequestBuilders.get("/api/v1/bank/status")
 	    ).andExpect(
-	    		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {Heeyeon: $292.32, Jiyoon: $239.40, Sunhye: $332.60, Jihye: $428.80, Suyeon: $590.10, Yuna: $660.12}")
+	    		MockMvcResultMatchers.jsonPath("$.status").value("Accounts: {John: $292.32, Bob: $239.40, Matt: $332.60, Clark: $428.80, Garrett: $590.10, Michael: $660.12}")
 	    );
        
 	    
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Heeyeon")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "John")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Heeyeon: $292.32")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("John: $292.32")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $238.29")
 		).andExpect(
@@ -1085,9 +1085,9 @@ class ServiceIntegrationTests {
         
         // Get statement
         mockMvc.perform(
-                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Yuna")
+                MockMvcRequestBuilders.get("/api/v1/bank/clients/" + "Michael")
         ).andExpect(
-        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Yuna: $660.12")
+        		MockMvcResultMatchers.jsonPath("$.statement[0]").value("Michael: $660.12")
 		).andExpect(
         		MockMvcResultMatchers.jsonPath("$.statement[1]").value("Transaction DEPOSIT: $50.00")
 		).andExpect(

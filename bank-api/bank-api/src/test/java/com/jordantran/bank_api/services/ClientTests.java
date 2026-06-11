@@ -37,25 +37,25 @@ class ClientTests {
     	
     	
     	
-    	ClientEntity heeyeonEntity = ClientEntity.builder()
+    	ClientEntity johnEntity = ClientEntity.builder()
     				.id(1L)
-    				.name("Heeyeon")
+    				.name("John")
     				.balance(100.5)
     				.bankEntity(null)
     				.build();
     	
-    	Long heeyeonID = heeyeonEntity.getId();
+    	Long johnID = johnEntity.getId();
     	
     	
-    	Optional<ClientEntity> heeyeon = Optional.of(heeyeonEntity);
+    	Optional<ClientEntity> john = Optional.of(johnEntity);
 
     	
         /*
          * A client's status displays their name and current account balance.
          */
-    	when(clientRepository.findById(1L)).thenReturn(heeyeon);
-        String status = clientService.getStatus(heeyeonID);
-        assertEquals("Heeyeon: $100.50", status);
+    	when(clientRepository.findById(1L)).thenReturn(john);
+        String status = clientService.getStatus(johnID);
+        assertEquals("John: $100.50", status);
         
         
         /*
@@ -63,8 +63,8 @@ class ClientTests {
          * their current status followed by their history list of transactions.
          */
         when(transactionService.findAll()).thenReturn(new ArrayList<>());
-        List<String> stmt = clientService.getStatement(heeyeonID);
-        List<String> expectedStmt1 = new ArrayList<>(List.of(clientService.getStatus(heeyeonID)));
+        List<String> stmt = clientService.getStatement(johnID);
+        List<String> expectedStmt1 = new ArrayList<>(List.of(clientService.getStatus(johnID)));
         assertTrue(expectedStmt1.size() == 1); /* just the status */
         assertEquals(expectedStmt1, stmt);
 
@@ -74,16 +74,16 @@ class ClientTests {
 				.id(1L)
 				.transactionType("DEPOSIT")
 				.amount(20.3)
-				.clientEntity(heeyeonEntity)
+				.clientEntity(johnEntity)
 				.build();
        	
        	
        	
 
-        clientService.deposit(heeyeonID, 20.3); // No need mock .createTransaction which is return value, not used
-        assertEquals("Heeyeon: $120.80", clientService.getStatus(heeyeonID));
+        clientService.deposit(johnID, 20.3); // No need mock .createTransaction which is return value, not used
+        assertEquals("John: $120.80", clientService.getStatus(johnID));
         List<String> expectedStmt2 = new ArrayList<>(List.of(
-        		clientService.getStatus(heeyeonID), 
+        		clientService.getStatus(johnID), 
         		"Transaction DEPOSIT: $20.30"
         		));
         assertTrue(expectedStmt2.size() == 2); /* status and one transaction */
@@ -94,7 +94,7 @@ class ClientTests {
         		List.of(t1)
         ));
         when(transactionService.getStatus(1L)).thenReturn("Transaction DEPOSIT: $20.30");
-        assertEquals(expectedStmt2, clientService.getStatement(heeyeonID));
+        assertEquals(expectedStmt2, clientService.getStatement(johnID));
     	
 
         
@@ -107,13 +107,13 @@ class ClientTests {
 				.id(2L)
 				.transactionType("WITHDRAW")
 				.amount(40.78)
-				.clientEntity(heeyeonEntity)
+				.clientEntity(johnEntity)
 				.build();
        	
-        clientService.withdraw(heeyeonID, 40.78); // No need mock .createTransaction which is return value, not used
-        assertEquals("Heeyeon: $80.02", clientService.getStatus(heeyeonID));
+        clientService.withdraw(johnID, 40.78); // No need mock .createTransaction which is return value, not used
+        assertEquals("John: $80.02", clientService.getStatus(johnID));
         List<String> expectedStmt3 = new ArrayList<>(List.of(
-        		clientService.getStatus(heeyeonID), 
+        		clientService.getStatus(johnID), 
         		"Transaction DEPOSIT: $20.30",
         		"Transaction WITHDRAW: $40.78"
         ));
@@ -123,7 +123,7 @@ class ClientTests {
         ));
         when(transactionService.getStatus(1L)).thenReturn("Transaction DEPOSIT: $20.30");
         when(transactionService.getStatus(2L)).thenReturn("Transaction WITHDRAW: $40.78");
-        assertEquals(expectedStmt3, clientService.getStatement(heeyeonID));
+        assertEquals(expectedStmt3, clientService.getStatement(johnID));
         
 
     }
