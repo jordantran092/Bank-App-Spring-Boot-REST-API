@@ -114,8 +114,11 @@ public class ClientService {
 		List<TransactionEntity> transactions = transactionService.findAll();
 		
 		for(TransactionEntity e : transactions) {
-			// if transaction has matching clientID
-			if(e.getId().equals(clientID)) {
+			Long transactionClientID = e.getClientEntity().getId();
+			
+			
+			// if transaction's client ID has matching argument clientID 
+			if(transactionClientID.equals(clientID)) {
 				
 				// add the transaction to result
 				Long transactionID = e.getId();
