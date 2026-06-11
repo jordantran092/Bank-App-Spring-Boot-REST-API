@@ -26,7 +26,6 @@ public class DataLoader implements CommandLineRunner { // a way to run start up 
 					.id(0L)
 					.error(false)
 					.errorStr("")
-//					.numOfClients(0L)
 					.build();
 			
 			

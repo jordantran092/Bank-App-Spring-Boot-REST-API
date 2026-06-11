@@ -41,6 +41,10 @@ public class ClientService {
 		return clientRepository.findById(id);
 	}
 	
+	/*
+	 * Retrieves client from clients list with given name. Will immediately stop searching once found, and return that, otherwise return null
+	 */
+	
 	public ClientEntity getClient(String name) {
 		ClientEntity client = null;
 		
@@ -61,6 +65,10 @@ public class ClientService {
 		return client;
 	}
 
+	
+    /*
+     * Adds deposit transaction to transactions table, and increases balance to amount deposited 
+     */
 	public TransactionEntity deposit(Long id, double amount) {
 
 		
@@ -82,6 +90,10 @@ public class ClientService {
 		
 	}
 	
+	
+    /*
+     * Adds withdraw transaction to transactions table, and decrease balance to amount withdrawn 
+     */
 	public TransactionEntity withdraw(Long id, double amount) {
 
 		
@@ -103,6 +115,10 @@ public class ClientService {
 		
 	}
 
+	
+    /*
+     * Returns the client's current status and a list of transaction history
+     */
 	public List<String> getStatement(Long clientID) {
 		
 		List<String> result = new ArrayList<>();

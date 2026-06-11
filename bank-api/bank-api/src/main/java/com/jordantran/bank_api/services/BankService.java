@@ -36,7 +36,7 @@ public class BankService {
 
 	
 	/*
-	 *  Will check if any of the errors will occur, if not then will create a new client with the name and initial balance and clear any previous bank service errors. Errors are prioritized in a way where the lowest ranked error is outputted if multiple errors occur, thus the higher in the if chain, the more priority. Error checks are if max number of accounts reached, if client already exists, and if non-positive initial balance
+	 *  Will check if any of the errors will occur, if not then will create a new client with the name and initial balance and clear any previous bank service errors. Errors are prioritized in a way where the lowest ranked error is outputted if multiple errors occur, thus the higher in the if chain, the more priority
 	 */
 	public ClientEntity addClient(ClientEntity clientEntity) {
 
@@ -52,7 +52,7 @@ public class BankService {
 		 * higher prio is higher in the if chain, then just do else if.... as you go down, to create the priority 
 		 * 
 		 * 
-		 * Should handle input validation here because need to turnOnError as well, so not helpful to handle input validation in controller
+		 * Best to handle input validation here because need to turnOnError as well, so not helpful to handle input validation in controller
 		 */
 		if(clientService.getClient(name) != null) { //rank 1
 			turnOnError(String.format("Error: Client %s already exists", name));
@@ -80,6 +80,10 @@ public class BankService {
 	}
 	
 	
+	
+	/*
+	 *  Will check if any of the errors will occur, if not then will withdraw the amount from that account and clear any previous bank service errors. Errors are prioritized in a way where the lowest ranked error is outputted if multiple errors occur, thus the higher in the if chain, the more priority.
+	 */
 	public Optional<TransactionEntity> withdraw(String clientName, double amount) {
 
 
@@ -113,6 +117,10 @@ public class BankService {
 		
 	}
 	
+	
+	/*
+	 *  Will check if any of the errors will occur, if not then will deposit the amount into that account and clear any previous bank service errors. Errors are prioritized in a way where the lowest ranked error is outputted if multiple errors occur, thus the higher in the if chain, the more priority.
+	 */
 	public Optional<TransactionEntity> deposit(String clientName, double amount) {
 
 		
@@ -146,6 +154,9 @@ public class BankService {
 	
 	
 	
+	/*
+	 *  Will check if any of the errors will occur, if not then will withdraw from fromName and deposit to toName, and clear any previous bank service errors. Errors are prioritized in a way where the lowest ranked error is outputted if multiple errors occur, thus the higher in the if chain, the more priority
+	 */
 	public Optional<List<TransactionEntity>> transfer(String fromName, String toName, double amount) {
 
 		
@@ -189,6 +200,9 @@ public class BankService {
 	
 	
 
+	/*
+	 * Print statement service. Will search through clients list, and if exists, will get the client's statement and return that. Otherwise, will give an error saying account does not exist
+	 */
 	public Optional<List<String>> getStatement(String clientName) {
 		
 		
@@ -232,7 +246,7 @@ public class BankService {
 		
 		
 		/*
-		 * 
+		 * If no error occurs with the services used e.g. deposit, then a list of all client's statuses will be returned. Otherwise, will return the recent error reason
 		 */
 		if(!error) {
 			

@@ -22,15 +22,16 @@ public class TransactionService {
 		this.transactionRepository = transactionRepository;
 	}
 	
-//	public long count() {
-//		return clientRepository.count();
-//	}
 	
 	public TransactionEntity save(TransactionEntity transactionEntity) {
 		return transactionRepository.save(transactionEntity);
 		
 	}
 	
+	
+    /*
+     * Appends a transaction entity to the transactions table based on type and amount
+     */
 	public TransactionEntity createTransaction(String transactionType, double amount, ClientEntity clientEntity) {
 		TransactionEntity transaction = TransactionEntity.builder()
 				.id(null)
@@ -66,7 +67,6 @@ public class TransactionService {
     		throw new RuntimeException("Transaction does not exist");
     	}
     	
-//        
     }
 
 

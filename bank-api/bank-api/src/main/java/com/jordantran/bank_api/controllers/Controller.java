@@ -28,27 +28,24 @@ public class Controller {
 		this.transactionMapper = transactionMapper;
 	}
 
+	
+    /*
+    Will retrieve the name and initial balance and use that to create a new client
+     */
 	@PostMapping(path = "/api/v1/bank/clients")
 	public ResponseEntity<ClientDTO> addClient(@RequestBody ClientDTO clientDTO) {
-		/*
-		 * bank.addclient will handle the business logic, not here
-		 * 
-		 * convert dto to entity
-		 * input into bank.addclient 
-		 * return result of added client 
-		 * convert back to dto
-		 * return dto
-		 */
+		
 		
 		ResponseEntity<ClientDTO> result = null;
 		
-		
+		// map to entity
 		ClientEntity clientEntity = clientMapper.mapFrom(clientDTO); 
 		
 		ClientEntity savedClientEntity = bankService.addClient(clientEntity);
 		
 		
 		if(savedClientEntity != null) {
+			// map back to DTO so it can be sent in the http response, return value will be converted into http response
 			ClientDTO savedClientDTO = clientMapper.mapTo(savedClientEntity);
 			result = new ResponseEntity<>(savedClientDTO, HttpStatus.CREATED);
 		}
@@ -64,12 +61,14 @@ public class Controller {
 	
 	
 	
-	
+	/*
+ 	- If deposit, will get input amount and input name to deposit into
+    - If withdraw, will get input amount and input name to withdraw from
+	 */
 	@PatchMapping(path = "/api/v1/bank/clients/{clientName}")
 	public ResponseEntity<TransactionDTO> depositOrWithdraw(@RequestBody TransactionDepositWithdrawDTO transactionDepositWithdrawDTO, @PathVariable("clientName") String clientName) {
 
-		
-		// Decided to re-use transaction object instead of making a separate object for this, contains all attributes we need. The rest of attributes can be left null since not needed
+	
 		
 		ResponseEntity<TransactionDTO> result = null;
 		 
@@ -102,7 +101,12 @@ public class Controller {
 	
 	
 	
-	// bulk to still indicate updating single clients resource, but a bulk of client resources i.e. 2 clients declared in the json body
+	/*
+	 If transfer, will get input names and input amount to transfer
+	 
+	 `bulk` to still indicate updating single clients resource, but a bulk of client resources i.e. 2 clients declared in the json body
+	 */
+
 	@PatchMapping(path = "/api/v1/bank/clients/bulk")
 	public ResponseEntity<List<TransactionDTO>> transfer(@RequestBody TransactionTransferDTO transactionTransferDTO) {
 
@@ -139,6 +143,9 @@ public class Controller {
 	
 	
 	
+	/*
+	 If print statement, will get input name and print the client's statement
+	 */
 	@GetMapping(path = "/api/v1/bank/clients/{clientName}")
 	public ResponseEntity<GetStatementDTO> getStatement(@PathVariable("clientName") String clientName) {
 		ResponseEntity<GetStatementDTO> result = null;
@@ -167,6 +174,9 @@ public class Controller {
 
 	
 
+	/*
+	 Get status of the bank for frontend to update bank status after some action such as an error response
+	 */
 	@GetMapping(path = "/api/v1/bank/status")
 	public ResponseEntity<BankStatusDTO> getStatus() {
 		ResponseEntity<BankStatusDTO> result = null;
