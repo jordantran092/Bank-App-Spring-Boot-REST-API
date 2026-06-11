@@ -147,6 +147,10 @@ public class ClientService {
 
 	}
 	
+	
+    /*
+     * Returns status of client, in terms of name and balance
+     */
 	public String getStatus(Long id) {
 		
 		Optional<ClientEntity> optionalClient = findById(id);
