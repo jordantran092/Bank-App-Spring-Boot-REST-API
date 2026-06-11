@@ -4,7 +4,6 @@ package com.jordantran.bank_api;
 
 import com.jordantran.bank_api.domain.dto.BankDTO;
 import com.jordantran.bank_api.domain.dto.ClientDTO;
-import com.jordantran.bank_api.domain.dto.TransactionDTO;
 import com.jordantran.bank_api.domain.dto.TransactionDepositWithdrawDTO;
 import com.jordantran.bank_api.domain.dto.TransactionTransferDTO;
 

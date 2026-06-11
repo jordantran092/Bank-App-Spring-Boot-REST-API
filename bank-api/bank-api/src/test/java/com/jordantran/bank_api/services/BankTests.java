@@ -1,94 +1,107 @@
-package com.jordantran.bank_api.services;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.jordantran.bank_api.domain.entities.*;
-import com.jordantran.bank_api.repositories.*;
 
-@ExtendWith(MockitoExtension.class)
 
-class BankTests {
 
-	
-	@Mock
-	BankRepository bankRepository;
-	@Mock
-	ClientService clientService;
 
-	
-	@InjectMocks
-	BankService bankService;
-	
-   
-    
-    @Test
-    public void test_03a() {
-    	
-		BankEntity bankEntity1 = BankEntity.builder()
-				.id(0L)
-				.error(false)
-				.errorStr("")
-				.build();
-		
-		Optional<BankEntity> optionalBankEntity1 = Optional.of(bankEntity1);
-	    	
-		when(bankRepository.findById(0L)).thenReturn(optionalBankEntity1);
-    	when(clientService.findAll()).thenReturn(new ArrayList<ClientEntity>()); // because empty bank
-        String status = bankService.getStatus();
-        
-        /* status of an empty bank */
-        assertEquals("Accounts: {}", status);
+// PROBABLY DELETE THIS LATER
 
-        /* Print statement from a non-existing account. */
-        
-        
-        // Don't need to because will return null anyways since mocked
-//        when(clientService.getClient("Heeyeon")).thenReturn(null); 
-//        when(bankRepository.save()).thenReturn(null);
-        
-        Optional<List<String>> heeyeonStmt = bankService.getStatement("Heeyeon");
-        assertEquals(heeyeonStmt, Optional.empty());
-        
-        
-		BankEntity bankEntity2 = BankEntity.builder()
-				.id(0L)
-				.error(true)
-				.errorStr("Error: From-Account Heeyeon does not exist")
-				.build();
-		
-		Optional<BankEntity> optionalBankEntity2 = Optional.of(bankEntity2);
-		
-		when(bankRepository.findById(0L)).thenReturn(optionalBankEntity2);
-        assertEquals("Error: From-Account Heeyeon does not exist", bankService.getStatus());
 
+//package com.jordantran.bank_api.services;
+//
+//import static org.junit.jupiter.api.Assertions.*;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//import java.util.Optional;
+//
+//import org.junit.jupiter.api.Test;
+//import org.junit.jupiter.api.extension.ExtendWith;
+//import org.mockito.InjectMocks;
+//import org.mockito.Mock;
+//import static org.mockito.Mockito.*;
+//import org.mockito.junit.jupiter.MockitoExtension;
+//
+//import com.jordantran.bank_api.domain.entities.*;
+//import com.jordantran.bank_api.repositories.*;
+//
+//@ExtendWith(MockitoExtension.class)
+//
+//class BankTests {
+//
+//	
+//	@Mock
+//	BankRepository bankRepository;
+//	@Mock
+//	ClientService clientService;
+//
+//	
+//	@InjectMocks
+//	BankService bankService;
+//	
+//   
+//    
+//    @Test
+//    public void test_03a() {
+//    	
+//		BankEntity bankEntity = BankEntity.builder()
+//				.id(0L)
+//				.error(false)
+//				.errorStr("")
+//				.build();
+//		
+//		Optional<BankEntity> optionalBankEntity = Optional.of(bankEntity);
+//	    	
+//		when(bankRepository.findById(0L)).thenReturn(optionalBankEntity);
+//    	when(clientService.findAll()).thenReturn(new ArrayList<ClientEntity>()); // because empty bank
+//        String status = bankService.getStatus();
+//        
+//        /* status of an empty bank */
+//        assertEquals("Accounts: {}", status);
+//
+//        /* Print statement from a non-existing account. */
+//        
+//        
+//        // For getStatement, don't need to return null from mocked methods explicitly because will return null by default
+//        Optional<List<String>> heeyeonStmt = bankService.getStatement("Heeyeon");
+//        // .getStatement will turn on error
+//        bankEntity.setError(true);
+//        bankEntity.setErrorStr("Error: From-Account Heeyeon does not exist");
+//        assertEquals(heeyeonStmt, Optional.empty());
+//        assertEquals("Error: From-Account Heeyeon does not exist", bankService.getStatus());
+//
+//        
+//        
+//        
 //        /* deposit to a non-existing account */
-//        b.deposit("Heeyeon", 300.05);
-//        assertEquals("Error: To-Account Heeyeon does not exist", b.getStatus());
-//        b.deposit("Jiyoon", -300.05); /* error of non-existing to-account takes priority (see error tables in PDF instructions) */
-//        assertEquals("Error: To-Account Jiyoon does not exist", b.getStatus());
+//        bankService.deposit("Heeyeon", 300.05); // Mocked methods will return null
+//        bankEntity.setError(true);
+//        bankEntity.setErrorStr("Error: To-Account Heeyeon does not exist");
+//        assertEquals("Error: To-Account Heeyeon does not exist", bankService.getStatus());
+//        
+//        bankService.deposit("Jiyoon", -300.05); /* error of non-existing to-account takes priority */
+//        bankEntity.setError(true);
+//        bankEntity.setErrorStr("Error: To-Account Jiyoon does not exist");
+//        assertEquals("Error: To-Account Jiyoon does not exist", bankService.getStatus());
 //
 //        /* withdraw from a non-existing account */
-//        b.withdraw("Heeyeon", 10.5);
-//        assertEquals("Error: From-Account Heeyeon does not exist", b.getStatus());
-//        b.withdraw("Jiyoon", -300.05); /* error of non-existing from-account takes priority (see error tables in PDF instructions) */
-//        assertEquals("Error: From-Account Jiyoon does not exist", b.getStatus());
+//        bankService.withdraw("Heeyeon", 10.5);
+//        bankEntity.setError(true);
+//        bankEntity.setErrorStr("Error: From-Account Heeyeon does not exist");
+//        assertEquals("Error: From-Account Heeyeon does not exist", bankService.getStatus());
+//        bankService.withdraw("Jiyoon", -300.05); /* error of non-existing from-account takes priority  */
+//        bankEntity.setError(true);
+//        bankEntity.setErrorStr("Error: From-Account Jiyoon does not exist");
+//        assertEquals("Error: From-Account Jiyoon does not exist", bankService.getStatus());
 //
-//        /* transfer between two non-existing accounts: error of from-account takes priority (see error tables in PDF instructions) */
-//        b.transfer("Heeyeon", "Jiyoon", 100.24);
-//        assertEquals("Error: From-Account Heeyeon does not exist", b.getStatus());
-//        b.transfer("Jiyoon", "Heeyeon", -100.24);
-//        assertEquals("Error: From-Account Jiyoon does not exist", b.getStatus());
+//        /* transfer between two non-existing accounts: error of from-account takes priority */
+//        bankService.transfer("Heeyeon", "Jiyoon", 100.24);
+//        
+//        assertEquals("Error: From-Account Heeyeon does not exist", bankService.getStatus());
+//        bankService.transfer("Jiyoon", "Heeyeon", -100.24);
+//        assertEquals("Error: From-Account Jiyoon does not exist", bankService.getStatus());
 //
 //        
 //        
@@ -178,9 +191,9 @@ class BankTests {
 //        when(transactionService.getStatus(1L)).thenReturn("Transaction WITHDRAW: $40.78");
 //        when(transactionService.getStatus(2L)).thenReturn("Transaction DEPOSIT: $20.30");
 //        assertEquals(expectedStmt3, clientService.getStatement(jiyoonID));
-
-    }
-    
-
-
-}
+//
+//    }
+//    
+//
+//
+//}

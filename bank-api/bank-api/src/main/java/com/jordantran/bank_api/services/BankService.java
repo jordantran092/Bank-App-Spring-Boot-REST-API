@@ -32,18 +32,7 @@ public class BankService {
 	public long count() {
 		return bankRepository.count();
 	}
-	
-	public BankEntity getBank() {
-		Optional<BankEntity> optionalBankEntity = bankRepository.findById(0L);
-		
-		if(optionalBankEntity.isPresent()) {
-			return optionalBankEntity.get();
-		}
-		else {
-			// Should not happen since bank initialized in dataloader, but in case
-			throw new RuntimeException("Bank does not exist");
-		}
-	}
+
 
 	
 	/*
@@ -218,6 +207,18 @@ public class BankService {
 		
 		return result;
 		
+	}
+	
+	public BankEntity getBank() {
+		Optional<BankEntity> optionalBankEntity = bankRepository.findById(0L);
+		
+		if(optionalBankEntity.isPresent()) {
+			return optionalBankEntity.get();
+		}
+		else {
+			// Should not happen since bank initialized in dataloader, but in case
+			throw new RuntimeException("Bank does not exist");
+		}
 	}
 	
 	

@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jordantran.bank_api.TestDataUtil;
 import com.jordantran.bank_api.domain.dto.*;
-import com.jordantran.bank_api.services.*;
 
 
 
@@ -31,13 +30,14 @@ class ControllerIntegrationTests {
 	private MockMvc mockMvc;
 	
 	@Autowired
-	public ControllerIntegrationTests(BankService bankService, ObjectMapper objectMapper, MockMvc mockMvc) {
+	public ControllerIntegrationTests(ObjectMapper objectMapper, MockMvc mockMvc) {
 		this.objectMapper = new ObjectMapper();
 		this.mockMvc = mockMvc;
 	}
 	
 	
 	//----------------------------------
+	
 	
 	
 	/* Get Bank Status */
@@ -187,6 +187,7 @@ class ControllerIntegrationTests {
         );
         
         
+        // Get statement
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/api/v1/bank/clients/" + clientDTO.getName())
         ).andExpect(
