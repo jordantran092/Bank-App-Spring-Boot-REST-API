@@ -21,7 +21,7 @@ Click here for front-end portion of source code: [repository](https://gitfront.i
 - **Unit Tests:** ClientService, TransactionService (using Mockito mocks)
 - **Controller Integration Tests:** HTTP layer with JSON response assertions (Full Spring context with MockMvc)
 - **Service Integration Tests:** Service layer + database interaction (Full Spring context with MockMvc)
-- Coverage: Deposit, Withdraw, Transfer, Account Creation, Statement Generation, Error Handling, Edge Cases
+- **Coverage:** Deposit, Withdraw, Transfer, Account Creation, Statement Generation, Error Handling, Edge Cases
 
 ## API Endpoints
 `GET /api/v1/bank/status` - Current status<br>
