@@ -2,11 +2,12 @@
 
 A full-stack banking application demonstrating **clean architecture**, **comprehensive testing**, and **RESTful API design**.
 <br><br>
-Click here for front-end portion of source code: [repository](https://github.com/jordantran092/Bank)
+Click here for front-end portion of source code: [repository](https://gitfront.io/r/jordan-tran/TAEhRt5MegjW/Bank/)
 
 <!-- 
+https://github.com/jordantran092/Bank
 
-https://gitfront.io/r/jordan-tran/TAEhRt5MegjW/Bank/
+
 -->
 
 ## Tech Stack
